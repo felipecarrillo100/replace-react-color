@@ -1,0 +1,86 @@
+import React, { FC } from 'react'
+import reactCSS from '../../reactcss'
+import { merge } from '../../helpers/utils'
+import * as color from '../../helpers/color'
+import { ColorWrap, Raised } from '../common'
+import CompactColor from './CompactColor'
+import CompactFields from './CompactFields'
+import { RGB } from '../../types'
+
+export interface CompactProps {
+  onChange?: (color: any, e: any) => void;
+  onSwatchHover?: (color: string, e: React.MouseEvent) => void;
+  colors?: string[];
+  hex: string;
+  rgb: RGB;
+  styles?: any;
+  className?: string;
+}
+
+export const Compact: FC<CompactProps> = ({
+  onChange,
+  onSwatchHover,
+  colors = ['#4D4D4D', '#999999', '#FFFFFF', '#F44E3B', '#FE9200', '#FCDC00',
+    '#DBDF00', '#A4DD00', '#68CCCA', '#73D8FF', '#AEA1FF', '#FDA1FF',
+    '#333333', '#808080', '#cccccc', '#D33115', '#E27300', '#FCC400',
+    '#B0BC00', '#68BC00', '#16A5A5', '#009CE0', '#7B64FF', '#FA28FF',
+    '#000000', '#666666', '#B3B3B3', '#9F0500', '#C45100', '#FB9E00',
+    '#808900', '#194D33', '#0C797D', '#0062B1', '#653294', '#AB149E',
+  ],
+  hex,
+  rgb,
+  styles: passedStyles = {},
+  className = ''
+}) => {
+  const styles = reactCSS(merge({
+    'default': {
+      Compact: {
+        background: '#f6f6f6',
+        borderRadius: '4px',
+      },
+      compact: {
+        paddingTop: '5px',
+        paddingLeft: '5px',
+        boxSizing: 'initial',
+        width: '240px',
+      },
+      clear: {
+        clear: 'both',
+      },
+    },
+  }, passedStyles))
+
+  const handleChange = (data: any, e: any) => {
+    if (!onChange) return
+    if (data.hex) {
+      color.isValidHex(data.hex) && onChange({
+        hex: data.hex,
+        source: 'hex',
+      }, e)
+    } else {
+      onChange(data, e)
+    }
+  }
+
+  return (
+    <Raised styles={{ wrap: styles.Compact } as any}>
+      <div style={styles.compact as React.CSSProperties} className={`compact-picker ${className}`}>
+        <div>
+          {colors.map((c: string) => (
+            <CompactColor
+              key={c}
+              color={c}
+              active={c.toLowerCase() === hex}
+              onClick={handleChange}
+              onSwatchHover={onSwatchHover}
+            />
+          ))}
+          <div style={styles.clear as React.CSSProperties} />
+        </div>
+        <CompactFields hex={hex} rgb={rgb} onChange={handleChange} />
+      </div>
+    </Raised>
+  )
+}
+
+export default ColorWrap(Compact)
