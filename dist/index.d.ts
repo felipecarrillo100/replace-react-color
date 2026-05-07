@@ -1,4 +1,4 @@
-import React, { ComponentType, FC, ReactElement, ReactNode } from 'react';
+import React, { FC, ComponentType, ReactElement, ReactNode } from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 
 interface HSL {
@@ -28,17 +28,6 @@ interface ColorState {
     oldHue: number;
     source?: string;
 }
-
-interface ColorWrapProps {
-    color?: Color;
-    onChange?: (color: ColorState, event: React.ChangeEvent<any> | MouseEvent | TouchEvent) => void;
-    onChangeComplete?: (color: ColorState, event: React.ChangeEvent<any> | MouseEvent | TouchEvent) => void;
-    onSwatchHover?: (color: ColorState, event: MouseEvent) => void;
-}
-declare const ColorWrap: <P extends object>(Picker: ComponentType<P & ColorState & {
-    onChange: any;
-    onSwatchHover?: any;
-}>) => React.FC<P & ColorWrapProps>;
 
 interface AlphaPickerProps {
     rgb: RGB;
@@ -151,21 +140,36 @@ interface PhotoshopProps {
 }
 declare const _default$6: React.FC<PhotoshopProps & ColorWrapProps>;
 
+/**
+ * Props for the SketchColor picker component.
+ */
 interface SketchProps {
+    /** The width of the picker component */
     width?: string | number;
+    /** The currently selected color represented as RGB */
     rgb: RGB;
+    /** The currently selected color represented as a Hex string */
     hex: string;
+    /** The currently selected color represented as HSV */
     hsv: HSV;
+    /** The currently selected color represented as HSL */
     hsl: HSL;
+    /** Callback fired when the color changes */
     onChange?: (color: any, e: any) => void;
+    /** Callback fired when a preset swatch is hovered */
     onSwatchHover?: (color: any, e: React.MouseEvent) => void;
+    /** If true, the alpha channel slider is hidden */
     disableAlpha?: boolean;
+    /** A list of hex string preset colors to display at the bottom */
     presetColors?: (string | {
         color: string;
         title?: string;
     })[];
+    /** Custom renderers for internal sub-components */
     renderers?: any;
+    /** Custom styles to override the default aesthetic */
     styles?: any;
+    /** Optional classname applied to the root element */
     className?: string;
 }
 declare const _default$5: React.FC<SketchProps & ColorWrapProps>;
@@ -215,6 +219,17 @@ interface GoogleProps {
     className?: string;
 }
 declare const _default$1: React.FC<GoogleProps & ColorWrapProps>;
+
+interface ColorWrapProps {
+    color?: Color;
+    onChange?: (color: ColorState, event: React.ChangeEvent<any> | MouseEvent | TouchEvent) => void;
+    onChangeComplete?: (color: ColorState, event: React.ChangeEvent<any> | MouseEvent | TouchEvent) => void;
+    onSwatchHover?: (color: ColorState, event: MouseEvent) => void;
+}
+declare const ColorWrap: <P extends object>(Picker: ComponentType<P & ColorState & {
+    onChange: any;
+    onSwatchHover?: any;
+}>) => React.FC<P & ColorWrapProps>;
 
 interface AlphaProps {
     hsl: HSL;
@@ -321,4 +336,4 @@ interface SwatchProps {
 }
 declare const _default: (props: SwatchProps) => react_jsx_runtime.JSX.Element;
 
-export { Alpha, _default$e as AlphaPicker, _default$d as BlockPicker, Checkboard, _default$b as ChromePicker, _default$c as CirclePicker, _default$a as CompactPicker, ColorWrap as CustomPicker, EditableInput, _default$9 as GithubPicker, _default$1 as GooglePicker, Hue, _default$8 as HuePicker, _default$7 as MaterialPicker, _default$6 as PhotoshopPicker, Raised, Saturation, _default$5 as SketchPicker, _default$4 as SliderPicker, _default as Swatch, _default$3 as SwatchesPicker, _default$2 as TwitterPicker, _default$b as default };
+export { Alpha, _default$e as AlphaPicker, type AlphaPickerProps, type AlphaProps, _default$d as BlockPicker, type BlockProps, Checkboard, type CheckboardProps, _default$b as ChromePicker, type ChromeProps, _default$c as CirclePicker, type CircleProps, type Color, type ColorState, type ColorWrapProps, _default$a as CompactPicker, type CompactProps, ColorWrap as CustomPicker, EditableInput, type EditableInputProps, _default$9 as GithubPicker, type GithubProps, _default$1 as GooglePicker, type GoogleProps, type HSL, type HSV, Hue, _default$8 as HuePicker, type HuePickerProps, type HueProps, _default$7 as MaterialPicker, type MaterialProps, _default$6 as PhotoshopPicker, type PhotoshopProps, type RGB, Raised, type RaisedProps, Saturation, type SaturationProps, _default$5 as SketchPicker, type SketchProps, _default$4 as SliderPicker, type SliderProps, _default as Swatch, type SwatchProps, _default$3 as SwatchesPicker, type SwatchesProps, _default$2 as TwitterPicker, type TwitterProps, _default$b as default };

@@ -10,7 +10,7 @@ This repository brings the classic color pickers (Sketch, Photoshop, Chrome, etc
 
 ## 🏆 Acknowledgements & Credits
 
-* **Modernization & Refactor**: Spearheaded by **fcarrill**, who completely overhauled the codebase to modern standards, purged legacy dependencies, implemented native TypeScript utilities, and modernized the build infrastructure to Vite/esbuild.
+* **Modernization & Refactor**: Spearheaded by **felipecarrillo100**, who completely overhauled the codebase to modern standards, purged legacy dependencies, implemented native TypeScript utilities, and modernized the build infrastructure to Vite/esbuild.
 * **Original Author**: The original `react-color` library was brilliantly designed and created by **Case Sandberg** (@casesandberg). All credit for the iconic UI designs, component structures, and the original `reactCSS` paradigm goes to him. 
 
 ---
@@ -24,7 +24,7 @@ The original `react-color` library was a staple in the React ecosystem but suffe
 4. **TypeScript Deficiencies**: It lacked native TypeScript support, relying on clunky third-party `@types` that were frequently out of sync.
 
 ### What We Fixed:
-- **Zero Dependencies**: Eliminated `lodash`, `material-colors`, and external icon libraries.
+- **Reduced Dependencies**: Eliminated `lodash`, `material-colors`, and external icon libraries.
 - **Inlined Assets**: SVGs and standard material color palettes are now natively built-in.
 - **Vendored Styling**: Completely vendored and converted the `reactcss` engine into pure TypeScript, keeping the original styling paradigm intact but modernizing its execution.
 - **Hooks & Functional Components**: Completely rewrote the core library to use modern React Hooks (`useState`, `useEffect`, `useCallback`), ensuring 100% compatibility with React 19 and Strict Mode.
