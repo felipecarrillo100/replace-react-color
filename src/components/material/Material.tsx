@@ -27,6 +27,7 @@ export const Material: FC<MaterialProps> = ({
         height: '98px',
         padding: '16px',
         fontFamily: 'Roboto',
+        boxSizing: 'content-box' as const,
       },
       HEXwrap: {
         position: 'relative',
