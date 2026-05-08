@@ -1,6 +1,7 @@
 {
   "entryPoints": ["src/index.ts"],
   "out": "docs",
+  "cleanOutputDir": false,
   "name": "replace-react-color API",
   "includeVersion": true,
   "excludeInternal": true

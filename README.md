@@ -4,6 +4,8 @@ A modernized, lightweight, and dependency-free TypeScript fork of the highly pop
 
 This repository brings the classic color pickers (Sketch, Photoshop, Chrome, etc.) into the modern era, fully compatible with **React 19**, while completely eliminating legacy bloat and ensuring long-term maintainability.
 
+> 🎨 **[Try the Live Demo](https://felipecarrillo100.github.io/replace-react-color/demo/)** — All pickers, fully interactive. Compare side-by-side with the [original react-color](https://casesandberg.github.io/react-color/).
+
 > 📚 **[View the API Documentation](https://felipecarrillo100.github.io/replace-react-color/)**
 
 ![Demo](https://media.giphy.com/media/26FfggT53qE304CwE/giphy.gif)

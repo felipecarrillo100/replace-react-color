@@ -26,7 +26,9 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "typecheck": "tsc --noEmit",
-    "docs": "typedoc"
+    "docs": "typedoc && npm install --prefix demo && npm run build --prefix demo",
+    "demo:dev": "npm install --prefix demo && npm run dev --prefix demo",
+    "demo:build": "npm install --prefix demo && npm run build --prefix demo"
   },
   "sideEffects": false,
   "keywords": [
