@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import React from 'react'
 
-import { CustomPicker } from 'react-color'
-import { Alpha } from 'react-color/lib/components/common'
+import { CustomPicker } from 'replace-react-color'
+import { Alpha } from 'replace-react-color'
 import MyPointer from './MyPointer'
 
 export const MyPicker = ({ rgb, hsl, onChange }) => {

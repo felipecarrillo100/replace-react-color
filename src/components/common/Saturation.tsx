@@ -1,6 +1,5 @@
-import React, { FC, useRef, useEffect, useCallback, useMemo } from 'react'
+import React, { FC, useRef, useEffect } from 'react'
 import reactCSS from '../../reactcss'
-import { throttle } from '../../helpers/utils'
 import * as saturation from '../../helpers/saturation'
 import { HSL, HSV } from '../../types'
 
@@ -32,59 +31,41 @@ export const Saturation: FC<SaturationProps> = ({
   style = {}
 }) => {
   const container = useRef<HTMLDivElement>(null)
+  // Always keep the latest hsl and onChange in refs so stable event listeners can read them
+  const hslRef = useRef(hsl)
+  const onChangeRef = useRef(onChange)
+  hslRef.current = hsl
+  onChangeRef.current = onChange
 
-  const throttledOnChange = useMemo(() => 
-    throttle((fn: Function, data: any, e: any) => {
-      fn(data, e)
-    }, 50),
-    []
-  )
-
-  const getContainerRenderWindow = useCallback(() => {
-    const el = container.current
-    if (!el) return window
-    let renderWindow = window
-    try {
-      while (renderWindow.document && !renderWindow.document.contains(el) && renderWindow.parent !== renderWindow) {
-        renderWindow = renderWindow.parent as any
-      }
-    } catch (e) {
-      // Handle cross-origin issues
+  // These stable functions are created ONCE on mount and registered on window.
+  // They always delegate to the latest values via refs — no stale closure possible.
+  const stableChange = useRef((e: any) => {
+    if (container.current && typeof onChangeRef.current === 'function') {
+      const change = saturation.calculateChange(e, hslRef.current, container.current)
+      if (change) onChangeRef.current(change, e)
     }
-    return renderWindow
-  }, [])
+  })
 
-  const handleChange = useCallback((e: any) => {
-    if (container.current && typeof onChange === 'function') {
-      throttledOnChange(
-        onChange,
-        saturation.calculateChange(e, hsl, container.current),
-        e
-      )
-    }
-  }, [hsl, onChange, throttledOnChange])
-
-  const handleMouseUp = useCallback(() => {
-    const renderWindow = getContainerRenderWindow()
-    renderWindow.removeEventListener('mousemove', handleChange)
-    renderWindow.removeEventListener('mouseup', handleMouseUp)
-  }, [handleChange, getContainerRenderWindow])
+  const stableMouseUp = useRef(() => {
+    window.removeEventListener('mousemove', stableChange.current)
+    window.removeEventListener('mouseup', stableMouseUp.current)
+  })
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    handleChange(e)
-    const renderWindow = getContainerRenderWindow()
-    renderWindow.addEventListener('mousemove', handleChange)
-    renderWindow.addEventListener('mouseup', handleMouseUp)
+    // Always clean up before registering — prevents stacking if mouseup was missed
+    window.removeEventListener('mousemove', stableChange.current)
+    window.removeEventListener('mouseup', stableMouseUp.current)
+    stableChange.current(e)
+    window.addEventListener('mousemove', stableChange.current)
+    window.addEventListener('mouseup', stableMouseUp.current)
   }
 
   useEffect(() => {
     return () => {
-      throttledOnChange.cancel()
-      const renderWindow = getContainerRenderWindow()
-      renderWindow.removeEventListener('mousemove', handleChange)
-      renderWindow.removeEventListener('mouseup', handleMouseUp)
+      window.removeEventListener('mousemove', stableChange.current)
+      window.removeEventListener('mouseup', stableMouseUp.current)
     }
-  }, [handleChange, handleMouseUp, getContainerRenderWindow, throttledOnChange])
+  }, [])
 
   const { color: colorStyle, white, black, pointer, circle, radius: styleRadius, shadow: styleShadow } = style
   const activeRadius = styleRadius || radius
@@ -148,8 +129,8 @@ export const Saturation: FC<SaturationProps> = ({
       style={styles.color as React.CSSProperties}
       ref={container}
       onMouseDown={handleMouseDown}
-      onTouchMove={handleChange}
-      onTouchStart={handleChange}
+      onTouchMove={stableChange.current}
+      onTouchStart={stableChange.current}
     >
       <style>{`
         .saturation-white {

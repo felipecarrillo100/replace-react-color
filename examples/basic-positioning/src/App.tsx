@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React from 'react'
 
-import { BlockPicker } from 'react-color'
+import { BlockPicker } from 'replace-react-color'
 
 export const App = () => {
   const handleColorChange = ({ hex }) => console.log(hex)

@@ -87,8 +87,7 @@ export const Alpha: FC<AlphaProps> = ({
         right: '0px',
         bottom: '0px',
         left: '0px',
-        background: `linear-gradient(to right, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%,
-         rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`,
+        background: `linear-gradient(to right, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`,
         boxShadow: activeShadow,
         borderRadius: activeRadius,
       },
@@ -113,8 +112,7 @@ export const Alpha: FC<AlphaProps> = ({
     },
     'vertical': {
       gradient: {
-        background: `linear-gradient(to bottom, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%,
-         rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`,
+        background: `linear-gradient(to bottom, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`,
       },
       pointer: {
         left: 0,

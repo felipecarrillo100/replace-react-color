@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useCallback, ComponentType } from 'react'
+import React, { useState, useEffect, useCallback, ComponentType } from 'react'
 import { debounce } from '../../helpers/utils'
 import * as color from '../../helpers/color'
 import { Color, ColorState } from '../../types'
@@ -11,7 +11,7 @@ export interface ColorWrapProps {
 }
 
 export const ColorWrap = <P extends object>(Picker: ComponentType<P & ColorState & { onChange: any, onSwatchHover?: any }>) => {
-  const ColorPicker: FC<P & ColorWrapProps> = (props) => {
+  const ColorPicker: React.FC<Omit<P, keyof ColorState | 'onChange'> & ColorWrapProps> = (props) => {
     const { color: colorProp = { h: 250, s: 0.50, l: 0.20, a: 1 }, onChange, onChangeComplete, onSwatchHover, ...restProps } = props
     const [state, setState] = useState<ColorState>(() => color.toState(colorProp, 0))
 

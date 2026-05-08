@@ -6,9 +6,10 @@ import { reducer as app } from './reducer'
 import { Provider } from 'react-redux'
 import App from './App'
 
-ReactDOM.render(
+const container = document.getElementById('root')
+const root = createRoot(container)
+root.render(
   <Provider store={ createStore(app) }>
     <App />
-  </Provider>,
-  document.getElementById('root'),
+  </Provider>
 )

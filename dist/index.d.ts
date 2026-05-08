@@ -41,7 +41,7 @@ interface AlphaPickerProps {
     pointer?: FC<any>;
     className?: string;
 }
-declare const _default$e: React.FC<AlphaPickerProps & ColorWrapProps>;
+declare const _default$e: React.FC<Omit<AlphaPickerProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface BlockProps {
     onChange?: (color: any, e: any) => void;
@@ -53,7 +53,7 @@ interface BlockProps {
     styles?: any;
     className?: string;
 }
-declare const _default$d: React.FC<BlockProps & ColorWrapProps>;
+declare const _default$d: React.FC<Omit<BlockProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface CircleProps {
     width?: string | number;
@@ -66,7 +66,7 @@ interface CircleProps {
     styles?: any;
     className?: string;
 }
-declare const _default$c: React.FC<CircleProps & ColorWrapProps>;
+declare const _default$c: React.FC<Omit<CircleProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface ChromeProps {
     width?: string | number;
@@ -81,7 +81,7 @@ interface ChromeProps {
     className?: string;
     defaultView?: 'hex' | 'rgb' | 'hsl';
 }
-declare const _default$b: React.FC<ChromeProps & ColorWrapProps>;
+declare const _default$b: React.FC<Omit<ChromeProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface CompactProps {
     onChange?: (color: any, e: any) => void;
@@ -92,7 +92,7 @@ interface CompactProps {
     styles?: any;
     className?: string;
 }
-declare const _default$a: React.FC<CompactProps & ColorWrapProps>;
+declare const _default$a: React.FC<Omit<CompactProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface GithubProps {
     width?: string | number;
@@ -103,7 +103,7 @@ interface GithubProps {
     styles?: any;
     className?: string;
 }
-declare const _default$9: React.FC<GithubProps & ColorWrapProps>;
+declare const _default$9: React.FC<Omit<GithubProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface HuePickerProps {
     width?: string | number;
@@ -115,7 +115,7 @@ interface HuePickerProps {
     styles?: any;
     className?: string;
 }
-declare const _default$8: React.FC<HuePickerProps & ColorWrapProps>;
+declare const _default$8: React.FC<Omit<HuePickerProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface MaterialProps {
     onChange?: (color: any, e: any) => void;
@@ -124,7 +124,7 @@ interface MaterialProps {
     styles?: any;
     className?: string;
 }
-declare const _default$7: React.FC<MaterialProps & ColorWrapProps>;
+declare const _default$7: React.FC<Omit<MaterialProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface PhotoshopProps {
     header?: string;
@@ -138,7 +138,7 @@ interface PhotoshopProps {
     onAccept?: (color: any, e: React.MouseEvent) => void;
     onCancel?: (color: any, e: React.MouseEvent) => void;
 }
-declare const _default$6: React.FC<PhotoshopProps & ColorWrapProps>;
+declare const _default$6: React.FC<Omit<PhotoshopProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 /**
  * Props for the SketchColor picker component.
@@ -172,7 +172,7 @@ interface SketchProps {
     /** Optional classname applied to the root element */
     className?: string;
 }
-declare const _default$5: React.FC<SketchProps & ColorWrapProps>;
+declare const _default$5: React.FC<Omit<SketchProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface SliderProps {
     hsl: HSL;
@@ -181,7 +181,7 @@ interface SliderProps {
     styles?: any;
     className?: string;
 }
-declare const _default$4: React.FC<SliderProps & ColorWrapProps>;
+declare const _default$4: React.FC<Omit<SliderProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface SwatchesProps {
     width?: string | number;
@@ -193,7 +193,7 @@ interface SwatchesProps {
     styles?: any;
     className?: string;
 }
-declare const _default$3: React.FC<SwatchesProps & ColorWrapProps>;
+declare const _default$3: React.FC<Omit<SwatchesProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface TwitterProps {
     onChange?: (color: any, e: any) => void;
@@ -205,7 +205,7 @@ interface TwitterProps {
     styles?: any;
     className?: string;
 }
-declare const _default$2: React.FC<TwitterProps & ColorWrapProps>;
+declare const _default$2: React.FC<Omit<TwitterProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface GoogleProps {
     width?: string | number;
@@ -218,7 +218,7 @@ interface GoogleProps {
     styles?: any;
     className?: string;
 }
-declare const _default$1: React.FC<GoogleProps & ColorWrapProps>;
+declare const _default$1: React.FC<Omit<GoogleProps, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface ColorWrapProps {
     color?: Color;
@@ -229,7 +229,7 @@ interface ColorWrapProps {
 declare const ColorWrap: <P extends object>(Picker: ComponentType<P & ColorState & {
     onChange: any;
     onSwatchHover?: any;
-}>) => React.FC<P & ColorWrapProps>;
+}>) => React.FC<Omit<P, keyof ColorState | "onChange"> & ColorWrapProps>;
 
 interface AlphaProps {
     hsl: HSL;

@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { actions as appActions } from './reducer'
 
-import { SketchPicker } from 'react-color'
+import { SketchPicker } from 'replace-react-color'
 
 export const App = ({ color, onChangeColor }) => {
   return (

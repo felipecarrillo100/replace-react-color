@@ -9,7 +9,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      'react-color': path.resolve(__dirname, '../../src/index.ts')
+      'replace-react-color': path.resolve(__dirname, '../../src/index.ts')
     }
   }
 })

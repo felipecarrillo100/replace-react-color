@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { SketchPicker } from 'react-color'
+import { SketchPicker } from 'replace-react-color'
 import Modal from './Modal'
 
 export const Portal = ({ onClose, onChange }) => {

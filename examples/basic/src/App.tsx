@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React from 'react'
 
-import { SketchPicker } from 'react-color'
+import { SketchPicker } from 'replace-react-color'
 
 export const App = () => {
   const handleColorChange = ({ hex }) => console.log(hex)

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React from 'react'
 
-import { CompactPicker } from 'react-color'
+import { CompactPicker } from 'replace-react-color'
 
 class App extends React.Component {
   state = {
