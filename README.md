@@ -8,7 +8,7 @@ This repository brings the classic color pickers (Sketch, Photoshop, Chrome, etc
 
 > 📚 **[View the API Documentation](https://felipecarrillo100.github.io/replace-react-color/)**
 
-![Demo](https://media.giphy.com/media/26FfggT53qE304CwE/giphy.gif)
+![Demo](https://raw.githubusercontent.com/felipecarrillo100/replace-react-color/main/media/demo.gif)
 
 ## 🏆 Acknowledgements & Credits
 
@@ -17,49 +17,31 @@ This repository brings the classic color pickers (Sketch, Photoshop, Chrome, etc
 
 ---
 
-## 🧠 Rationale for the Rewrite
+## 🚀 What's New in Version 4.0
 
-The original `react-color` library was a staple in the React ecosystem but suffered from significant bit-rot:
-1. **Dependency Bloat**: It relied heavily on outdated utilities like `lodash`, `lodash-es`, `material-colors`, and `@icons/material`.
-2. **React 15/16 Legacy**: The codebase was written using outdated React Class components, legacy lifecycle methods, and Enzyme testing paradigms, breaking entirely on React 18 and 19.
-3. **`reactcss` Abandonment**: The underlying styling engine (`reactcss`) was unmaintained, throwing numerous deprecation warnings and failing in modern strict-mode environments.
-4. **TypeScript Deficiencies**: It lacked native TypeScript support, relying on clunky third-party `@types` that were frequently out of sync.
+Version 4.0 marks a significant milestone in the evolution of this fork, moving from a "modernized wrapper" to a completely rebuilt internal architecture.
 
-### What We Fixed:
-- **Reduced Dependencies**: Eliminated `lodash`, `material-colors`, and external icon libraries.
-- **Inlined Assets**: SVGs and standard material color palettes are now natively built-in.
-- **Vendored Styling**: Completely vendored and converted the `reactcss` engine into pure TypeScript, keeping the original styling paradigm intact but modernizing its execution.
-- **Hooks & Functional Components**: Completely rewrote the core library to use modern React Hooks (`useState`, `useEffect`, `useCallback`), ensuring 100% compatibility with React 19 and Strict Mode.
-- **ESM/CJS Support**: Modernized the build pipeline using `tsup` to seamlessly output highly optimized ESM and CommonJS bundles.
+*   **Zero Styling Dependencies**: We have completely removed the `reactCSS` engine. Styles are now handled via native React inline styles, making the library even lighter and faster.
+*   **Standard Styling Props**: Every picker now supports standard `className` and `style` props out of the box.
+*   **Performance Boost**: Interactions (like dragging pointers) are significantly more fluid due to the removal of the legacy styling abstraction layer.
+*   **Full Type Safety**: Rebuilt internal types to ensure that custom sub-component styling is robust and type-safe.
 
 ---
 
-## 🚀 Migration Plan (For Existing Users)
+## 🧠 Rationale for the Rewrite
 
-Migrating from the legacy `react-color` to this modernized fork is designed to be a **seamless, drop-in replacement**. We went to great lengths to preserve the exact same API surface area while ripping out the legacy internals.
+The original `react-color` library was a staple in the React ecosystem but suffered from significant bit-rot:
+1. **Dependency Bloat**: It relied heavily on outdated utilities like `lodash`, `lodash-es`, and `@icons/material`.
+2. **React 15/16 Legacy**: The codebase was written using outdated React Class components, legacy lifecycle methods, and Enzyme testing paradigms, breaking entirely on modern React.
+3. **`reactcss` Abandonment**: The underlying styling engine (`reactcss`) was unmaintained, throwing numerous deprecation warnings and causing performance bottlenecks.
+4. **TypeScript Deficiencies**: It lacked native TypeScript support, relying on clunky third-party `@types`.
 
-### 1. Update Dependencies
-Remove the old library and install the new modernized package:
-```bash
-# Remove the old package and its types
-npm uninstall react-color @types/react-color
-
-# Install the modernized version (update with the published package name)
-npm install replace-react-color
-```
-
-### 2. Update Imports
-Because the API surface has been perfectly preserved, you only need to change your import paths if the package name changes. All components function exactly as they did before.
-```tsx
-// OLD
-import { SketchPicker } from 'react-color'
-
-// NEW
-import { SketchPicker } from 'replace-react-color'
-```
-
-### 3. Enjoy React 19 Compatibility
-You no longer need to use `--legacy-peer-deps` or worry about your console flooding with `componentWillReceiveProps` deprecation warnings. You can now safely upgrade your application to React 18 or React 19!
+### What We Fixed:
+- **Reduced Dependencies**: Eliminated `lodash`, `material-colors`, and external icon libraries.
+- **Inlined Assets**: SVGs and standard color palettes are now natively built-in.
+- **Native Styling**: Completely replaced the `reactcss` engine with pure React inline styles, ensuring zero overhead and better performance.
+- **Hooks & Functional Components**: Completely rewrote the core library to use modern React Hooks, ensuring 100% compatibility with React 19 and Strict Mode.
+- **Highly Optimized Build**: Modernized the build pipeline using `tsup` to output optimized ESM and CommonJS bundles.
 
 ---
 
@@ -82,4 +64,43 @@ export const Component = () => {
 }
 ```
 
-You can import `AlphaPicker`, `BlockPicker`, `ChromePicker`, `CirclePicker`, `CompactPicker`, `GithubPicker`, `HuePicker`, `MaterialPicker`, `PhotoshopPicker`, `SketchPicker`, `SliderPicker`, `SwatchesPicker`, and `TwitterPicker` respectively.
+### 🎨 Styling (New in v4.0)
+You can now style any picker using standard React props:
+
+```tsx
+<ChromePicker 
+  className="my-custom-picker"
+  style={{ boxShadow: 'none', border: '1px solid #eee' }}
+/>
+```
+
+> [!NOTE]
+> The legacy `styles` prop (from the original `react-color`) is still supported for backward compatibility but is now considered **deprecated**. We recommend migrating to the standard `style` and `className` props.
+
+---
+
+## 🚀 Migration Plan (For Existing Users)
+
+Migrating from the legacy `react-color` is a **seamless, drop-in replacement**.
+
+### 1. Update Dependencies
+```bash
+npm uninstall react-color @types/react-color
+npm install replace-react-color
+```
+
+### 2. Update Imports
+```tsx
+// OLD: import { SketchPicker } from 'react-color'
+// NEW:
+import { SketchPicker } from 'replace-react-color'
+```
+
+### 3. Enjoy Modern Performance
+You no longer need to use `--legacy-peer-deps` or worry about console flooding with deprecation warnings. You can now safely upgrade your application to React 18 or React 19!
+
+---
+
+## 🛠 Available Pickers
+
+You can import `AlphaPicker`, `BlockPicker`, `ChromePicker`, `CirclePicker`, `CompactPicker`, `GithubPicker`, `HuePicker`, `MaterialPicker`, `PhotoshopPicker`, `SketchPicker`, `SliderPicker`, `SwatchesPicker`, and `TwitterPicker`.
