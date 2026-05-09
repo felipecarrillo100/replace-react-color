@@ -23,7 +23,7 @@ export const simpleCheckForValidColor = (data: any) => {
 }
 
 export const toState = (data: Color | any, oldHue?: number): ColorState => {
-  const col = engine.parseColor(data)
+  const col = engine.parseColor(data.hex || data)
   const hsl = engine.rgbToHsl(col.r, col.g, col.b)
   const hsv = engine.rgbToHsv(col.r, col.g, col.b)
   const rgb = { r: Math.round(col.r), g: Math.round(col.g), b: Math.round(col.b), a: col.a }
