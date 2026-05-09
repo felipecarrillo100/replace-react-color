@@ -1,6 +1,7 @@
-import React, { useRef, useEffect, FC } from 'react'
+import React, { useRef, FC } from 'react'
 import reactCSS from '../../reactcss'
 import * as alpha from '../../helpers/alpha'
+import { useColorDrag } from '../../helpers/useColorDrag'
 import { HSL, RGB } from '../../types'
 import Checkboard from './Checkboard'
 
@@ -36,31 +37,16 @@ export const Alpha: FC<AlphaProps> = ({
   const activeRadius = styleRadius || radius;
   const activeShadow = styleShadow || shadow;
   const container = useRef<HTMLDivElement>(null)
+  
+  // Use refs for stable access to latest props in the drag callback
+  const propsRef = useRef({ hsl, rgb, onChange, a })
+  propsRef.current = { hsl, rgb, onChange, a }
 
-  const handleChange = (e: any) => {
-    if (container.current) {
-      const change = alpha.calculateChange(e, hsl, direction, a ?? rgb.a ?? 1, container.current)
-      change && typeof onChange === 'function' && onChange(change, e)
-    }
-  }
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    handleChange(e)
-    window.addEventListener('mousemove', handleChange)
-    window.addEventListener('mouseup', handleMouseUp)
-  }
-
-  const handleMouseUp = () => {
-    window.removeEventListener('mousemove', handleChange)
-    window.removeEventListener('mouseup', handleMouseUp)
-  }
-
-  useEffect(() => {
-    return () => {
-      window.removeEventListener('mousemove', handleChange)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [])
+  const { handleMouseDown, handleTouchStart } = useColorDrag(container, ({ e, container }) => {
+    const { hsl, rgb, onChange, a } = propsRef.current
+    const change = alpha.calculateChange(e, hsl, direction, a ?? rgb.a ?? 1, container)
+    change && typeof onChange === 'function' && onChange(change, e)
+  })
 
   const styles = reactCSS({
     'default': {
@@ -137,8 +123,8 @@ export const Alpha: FC<AlphaProps> = ({
         style={styles.container as React.CSSProperties}
         ref={container}
         onMouseDown={handleMouseDown}
-        onTouchMove={handleChange}
-        onTouchStart={handleChange}
+        onTouchMove={handleTouchStart}
+        onTouchStart={handleTouchStart}
       >
         <div style={styles.pointer as React.CSSProperties}>
           {Pointer ? (

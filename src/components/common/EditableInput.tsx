@@ -86,34 +86,61 @@ export const EditableInput: FC<EditableInputProps> = ({
     }
   }
 
-  const handleDrag = useCallback((e: MouseEvent) => {
-    if (dragLabel && typeof valueProp === 'number') {
-      const newValue = Math.round(valueProp + e.movementX)
-      if (newValue >= 0 && (dragMax === undefined || newValue <= dragMax)) {
-        onChange && onChange(getValueObjectWithLabel(newValue), e)
-      }
-    }
-  }, [dragLabel, valueProp, dragMax, onChange, getValueObjectWithLabel])
+  const valueRef = useRef(valueProp)
+  valueRef.current = valueProp
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+  const frameRef = useRef<number | null>(null)
+  const movementRef = useRef(0)
 
-  const handleMouseUp = useCallback(() => {
-    window.removeEventListener('mousemove', handleDrag)
-    window.removeEventListener('mouseup', handleMouseUp)
-  }, [handleDrag])
+  const handleDrag = useRef((e: MouseEvent) => {
+    if (dragLabel && typeof valueRef.current === 'number') {
+      // Accumulate the movement since the last frame
+      movementRef.current += e.movementX
+
+      if (frameRef.current !== null) return
+
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = null
+        const val = valueRef.current
+        if (typeof val === 'number') {
+          const totalMovement = movementRef.current
+          movementRef.current = 0
+
+          const newValue = Math.round(val + totalMovement)
+          if (newValue >= 0 && (dragMax === undefined || newValue <= dragMax)) {
+            onChangeRef.current && onChangeRef.current(getValueObjectWithLabel(newValue), e)
+          }
+        }
+      })
+    }
+  })
+
+  const handleStop = useRef(() => {
+    window.removeEventListener('mousemove', handleDrag.current)
+    window.removeEventListener('mouseup', handleStop.current)
+
+    if (frameRef.current !== null) {
+      cancelAnimationFrame(frameRef.current)
+      frameRef.current = null
+    }
+    movementRef.current = 0
+  })
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (dragLabel) {
       e.preventDefault()
-      window.addEventListener('mousemove', handleDrag)
-      window.addEventListener('mouseup', handleMouseUp)
+      window.addEventListener('mousemove', handleDrag.current)
+      window.addEventListener('mouseup', handleStop.current)
     }
   }
 
   useEffect(() => {
     return () => {
-      window.removeEventListener('mousemove', handleDrag)
-      window.removeEventListener('mouseup', handleMouseUp)
+      window.removeEventListener('mousemove', handleDrag.current)
+      window.removeEventListener('mouseup', handleStop.current)
     }
-  }, [handleDrag, handleMouseUp])
+  }, [])
 
   const styles = reactCSS({
     'default': {

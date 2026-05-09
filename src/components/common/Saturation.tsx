@@ -1,6 +1,7 @@
-import React, { FC, useRef, useEffect } from 'react'
+import React, { FC, useRef } from 'react'
 import reactCSS from '../../reactcss'
 import * as saturation from '../../helpers/saturation'
+import { useColorDrag } from '../../helpers/useColorDrag'
 import { HSL, HSV } from '../../types'
 
 export interface SaturationProps {
@@ -31,41 +32,18 @@ export const Saturation: FC<SaturationProps> = ({
   style = {}
 }) => {
   const container = useRef<HTMLDivElement>(null)
-  // Always keep the latest hsl and onChange in refs so stable event listeners can read them
-  const hslRef = useRef(hsl)
-  const onChangeRef = useRef(onChange)
-  hslRef.current = hsl
-  onChangeRef.current = onChange
 
-  // These stable functions are created ONCE on mount and registered on window.
-  // They always delegate to the latest values via refs — no stale closure possible.
-  const stableChange = useRef((e: any) => {
-    if (container.current && typeof onChangeRef.current === 'function') {
-      const change = saturation.calculateChange(e, hslRef.current, container.current)
-      if (change) onChangeRef.current(change, e)
+  // Use refs for stable access to latest props in the drag callback
+  const propsRef = useRef({ hsl, onChange })
+  propsRef.current = { hsl, onChange }
+
+  const { handleMouseDown, handleTouchStart } = useColorDrag(container, ({ e, container }) => {
+    const { hsl, onChange } = propsRef.current
+    const change = saturation.calculateChange(e, hsl, container)
+    if (change && typeof onChange === 'function') {
+      onChange(change, e)
     }
   })
-
-  const stableMouseUp = useRef(() => {
-    window.removeEventListener('mousemove', stableChange.current)
-    window.removeEventListener('mouseup', stableMouseUp.current)
-  })
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    // Always clean up before registering — prevents stacking if mouseup was missed
-    window.removeEventListener('mousemove', stableChange.current)
-    window.removeEventListener('mouseup', stableMouseUp.current)
-    stableChange.current(e)
-    window.addEventListener('mousemove', stableChange.current)
-    window.addEventListener('mouseup', stableMouseUp.current)
-  }
-
-  useEffect(() => {
-    return () => {
-      window.removeEventListener('mousemove', stableChange.current)
-      window.removeEventListener('mouseup', stableMouseUp.current)
-    }
-  }, [])
 
   const { color: colorStyle, white, black, pointer, circle, radius: styleRadius, shadow: styleShadow } = style
   const activeRadius = styleRadius || radius
@@ -129,8 +107,8 @@ export const Saturation: FC<SaturationProps> = ({
       style={styles.color as React.CSSProperties}
       ref={container}
       onMouseDown={handleMouseDown}
-      onTouchMove={stableChange.current}
-      onTouchStart={stableChange.current}
+      onTouchMove={handleTouchStart}
+      onTouchStart={handleTouchStart}
     >
       <style>{`
         .saturation-white {

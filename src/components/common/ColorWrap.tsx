@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, ComponentType } from 'react'
+import React, { useState, useEffect, useCallback, useRef, ComponentType } from 'react'
 import { debounce } from '../../helpers/utils'
 import * as color from '../../helpers/color'
 import { Color, ColorState } from '../../types'
@@ -14,9 +14,26 @@ export const ColorWrap = <P extends object>(Picker: ComponentType<P & ColorState
   const ColorPicker: React.FC<Omit<P, keyof ColorState | 'onChange'> & ColorWrapProps> = (props) => {
     const { color: colorProp = { h: 250, s: 0.50, l: 0.20, a: 1 }, onChange, onChangeComplete, onSwatchHover, ...restProps } = props
     const [state, setState] = useState<ColorState>(() => color.toState(colorProp, 0))
+    const latestAlpha = useRef(state.hsl.a)
+    latestAlpha.current = state.hsl.a
 
     useEffect(() => {
-      setState(color.toState(colorProp, state.oldHue))
+      const nextState = color.toState(colorProp, state.oldHue)
+      
+      const hasAlpha = typeof colorProp === 'object' && ('a' in colorProp || (colorProp as any).alpha !== undefined)
+      const isHex8 = typeof colorProp === 'string' && (colorProp.length === 5 || colorProp.length === 9)
+      
+      if (!hasAlpha && !isHex8) {
+        nextState.hsl.a = latestAlpha.current
+        nextState.rgb.a = latestAlpha.current
+        nextState.hsv.a = latestAlpha.current
+      }
+      
+      // Only update if it's actually different to avoid 'weirdness' from redundant updates
+      if (nextState.hex !== state.hex || nextState.hsl.a !== state.hsl.a) {
+        console.log('ColorWrap useEffect: syncing from props', { colorProp, prevAlpha: latestAlpha.current, nextAlpha: nextState.hsl.a })
+        setState(nextState)
+      }
     }, [colorProp])
 
     const debouncedOnChangeComplete = useCallback(
@@ -26,16 +43,16 @@ export const ColorWrap = <P extends object>(Picker: ComponentType<P & ColorState
       []
     )
 
-
     const handleChange = useCallback((data: any, event: any) => {
       const isValidColor = color.simpleCheckForValidColor(data)
       if (isValidColor) {
-        const colors = color.toState(data, data.h || state.oldHue)
+        const colors = color.toState({ a: state.hsl.a, ...data }, data.h || state.oldHue)
+        console.log('ColorWrap handleChange:', { inputA: data.a, stateA: state.hsl.a, finalA: colors.hsl.a })
         setState(colors)
         onChangeComplete && debouncedOnChangeComplete(onChangeComplete, colors, event)
         onChange && onChange(colors, event)
       }
-    }, [onChange, onChangeComplete, state.oldHue, debouncedOnChangeComplete])
+    }, [onChange, onChangeComplete, state.hsl.a, state.oldHue, debouncedOnChangeComplete])
 
     const handleSwatchHover = useCallback((data: any, event: any) => {
       const isValidColor = color.simpleCheckForValidColor(data)

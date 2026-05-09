@@ -1,6 +1,7 @@
-import React, { FC, useRef, useEffect, useCallback } from 'react'
+import React, { FC, useRef } from 'react'
 import reactCSS from '../../reactcss'
 import * as hue from '../../helpers/hue'
+import { useColorDrag } from '../../helpers/useColorDrag'
 import { HSL } from '../../types'
 
 export interface HueProps {
@@ -30,30 +31,17 @@ export const Hue: FC<HueProps> = ({
   const activeShadow = styleShadow || shadow;
   const container = useRef<HTMLDivElement>(null)
 
-  const handleChange = useCallback((e: any) => {
-    if (container.current) {
-      const change = hue.calculateChange(e, direction, hsl, container.current)
-      change && typeof onChange === 'function' && onChange(change, e)
-    }
-  }, [direction, hsl, onChange])
+  // Use refs to ensure the drag callback always has access to the latest props
+  // without needing to re-create the stable useColorDrag handlers.
+  const hslRef = useRef(hsl)
+  const onChangeRef = useRef(onChange)
+  hslRef.current = hsl
+  onChangeRef.current = onChange
 
-  const handleMouseUp = useCallback(() => {
-    window.removeEventListener('mousemove', handleChange)
-    window.removeEventListener('mouseup', handleMouseUp)
-  }, [handleChange])
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    handleChange(e)
-    window.addEventListener('mousemove', handleChange)
-    window.addEventListener('mouseup', handleMouseUp)
-  }
-
-  useEffect(() => {
-    return () => {
-      window.removeEventListener('mousemove', handleChange)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [handleChange, handleMouseUp])
+  const { handleMouseDown, handleTouchStart } = useColorDrag(container, ({ e, container }) => {
+    const change = hue.calculateChange(e, direction, hslRef.current, container)
+    change && typeof onChangeRef.current === 'function' && onChangeRef.current(change, e)
+  })
 
   const styles = reactCSS({
     'default': {
@@ -101,8 +89,8 @@ export const Hue: FC<HueProps> = ({
         style={styles.container as React.CSSProperties}
         ref={container}
         onMouseDown={handleMouseDown}
-        onTouchMove={handleChange}
-        onTouchStart={handleChange}
+        onTouchMove={handleTouchStart}
+        onTouchStart={handleTouchStart}
       >
         <style>{`
           .hue-horizontal {
