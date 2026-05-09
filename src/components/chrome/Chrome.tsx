@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 
 import { ColorWrap, Saturation, Hue, Alpha, Checkboard } from '../common'
 import ChromeFields from './ChromeFields'
@@ -19,6 +18,7 @@ export interface ChromeProps {
   renderers?: any;
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
   defaultView?: 'hex' | 'rgb' | 'hsl';
 }
 
@@ -33,96 +33,83 @@ export const Chrome: FC<ChromeProps> = ({
   renderers,
   styles: passedStyles = {},
   className = '',
+  style = {},
   defaultView
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      picker: {
-        width,
-        background: '#fff',
-        borderRadius: '2px',
-        boxShadow: '0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3)',
-        boxSizing: 'initial',
-        fontFamily: 'Menlo',
-      },
-      saturation: {
-        width: '100%',
-        paddingBottom: '55%',
-        position: 'relative',
-        borderRadius: '2px 2px 0 0',
-        overflow: 'hidden',
-      },
-      Saturation: {
-        radius: '2px 2px 0 0',
-      },
-      body: {
-        padding: '16px 16px 12px',
-      },
-      controls: {
-        display: 'flex',
-      },
-      color: {
-        width: '32px',
-      },
-      swatch: {
-        marginTop: '6px',
-        width: '16px',
-        height: '16px',
-        borderRadius: '8px',
-        position: 'relative',
-        overflow: 'hidden',
-      },
-      active: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        borderRadius: '8px',
-        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.1)',
-        background: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`,
-        zIndex: '2',
-      },
-      toggles: {
-        flex: '1',
-      },
-      hue: {
-        height: '10px',
-        position: 'relative',
-        marginBottom: '8px',
-      },
-      Hue: {
-        radius: '2px',
-      },
-      alpha: {
-        height: '10px',
-        position: 'relative',
-      },
-      Alpha: {
-        radius: '2px',
-      },
+  const baseStyles: any = {
+    picker: {
+      width,
+      background: '#fff',
+      borderRadius: '2px',
+      boxShadow: '0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3)',
+      boxSizing: 'initial',
+      fontFamily: 'Menlo',
+      ...style,
     },
-    'disableAlpha': {
-      color: {
-        width: '22px',
-      },
-      alpha: {
-        display: 'none',
-      },
-      hue: {
-        marginBottom: '0px',
-      },
-      swatch: {
-        width: '10px',
-        height: '10px',
-        marginTop: '0px',
-      },
+    saturation: {
+      width: '100%',
+      paddingBottom: '55%',
+      position: 'relative',
+      borderRadius: '2px 2px 0 0',
+      overflow: 'hidden',
     },
-  }, passedStyles), { disableAlpha })
+    Saturation: {
+      radius: '2px 2px 0 0',
+    },
+    body: {
+      padding: '16px 16px 12px',
+    },
+    controls: {
+      display: 'flex',
+    },
+    color: {
+      width: disableAlpha ? '22px' : '32px',
+    },
+    swatch: {
+      marginTop: disableAlpha ? '0px' : '6px',
+      width: disableAlpha ? '10px' : '16px',
+      height: disableAlpha ? '10px' : '16px',
+      borderRadius: '8px',
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    active: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      borderRadius: '8px',
+      boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.1)',
+      background: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`,
+      zIndex: 2,
+    },
+    toggles: {
+      flex: '1',
+    },
+    hue: {
+      height: '10px',
+      position: 'relative',
+      marginBottom: disableAlpha ? '0px' : '8px',
+    },
+    Hue: {
+      radius: '2px',
+    },
+    alpha: {
+      height: '10px',
+      position: 'relative',
+      display: disableAlpha ? 'none' : 'block',
+    },
+    Alpha: {
+      radius: '2px',
+    },
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   return (
-    <div style={styles.picker as React.CSSProperties} className={`chrome-picker ${className}`}>
-      <div style={styles.saturation as React.CSSProperties}>
+    <div style={styles.picker} className={`chrome-picker ${className}`}>
+      <div style={styles.saturation}>
         <Saturation
           style={styles.Saturation}
           hsl={hsl}
@@ -131,16 +118,16 @@ export const Chrome: FC<ChromeProps> = ({
           onChange={onChange}
         />
       </div>
-      <div style={styles.body as React.CSSProperties}>
-        <div style={styles.controls as React.CSSProperties} className="flexbox-fix">
-          <div style={styles.color as React.CSSProperties}>
-            <div style={styles.swatch as React.CSSProperties}>
-              <div style={styles.active as React.CSSProperties} />
+      <div style={styles.body}>
+        <div style={styles.controls} className="flexbox-fix">
+          <div style={styles.color}>
+            <div style={styles.swatch}>
+              <div style={styles.active} />
               <Checkboard renderers={renderers} />
             </div>
           </div>
-          <div style={styles.toggles as React.CSSProperties}>
-            <div style={styles.hue as React.CSSProperties}>
+          <div style={styles.toggles}>
+            <div style={styles.hue}>
               <Hue
                 style={styles.Hue}
                 hsl={hsl}
@@ -148,7 +135,7 @@ export const Chrome: FC<ChromeProps> = ({
                 onChange={onChange}
               />
             </div>
-            <div style={styles.alpha as React.CSSProperties}>
+            <div style={styles.alpha}>
               <Alpha
                 style={styles.Alpha}
                 rgb={rgb}

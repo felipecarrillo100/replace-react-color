@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
 import SliderSwatch from './SliderSwatch'
 import { HSL } from '../../types'
 
@@ -9,29 +8,27 @@ export interface SliderSwatchesProps {
 }
 
 export const SliderSwatches: FC<SliderSwatchesProps> = ({ onClick, hsl }) => {
-  const styles = reactCSS({
-    'default': {
-      swatches: {
-        marginTop: '20px',
-      },
-      swatch: {
-        boxSizing: 'border-box',
-        width: '20%',
-        paddingRight: '1px',
-        float: 'left',
-      },
-      clear: {
-        clear: 'both',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    swatches: {
+      marginTop: '20px',
     },
-  })
+    swatch: {
+      boxSizing: 'border-box',
+      width: '20%',
+      paddingRight: '1px',
+      float: 'left',
+    },
+    clear: {
+      clear: 'both',
+    },
+  }
 
   // Acceptible difference in floating point equality
   const epsilon = 0.1
 
   return (
-    <div style={styles.swatches as React.CSSProperties}>
-      <div style={styles.swatch as React.CSSProperties}>
+    <div style={baseStyles.swatches}>
+      <div style={baseStyles.swatch}>
         <SliderSwatch
           hsl={hsl}
           offset={0.80}
@@ -41,7 +38,7 @@ export const SliderSwatches: FC<SliderSwatchesProps> = ({ onClick, hsl }) => {
           first
         />
       </div>
-      <div style={styles.swatch as React.CSSProperties}>
+      <div style={baseStyles.swatch}>
         <SliderSwatch
           hsl={hsl}
           offset={0.65}
@@ -50,7 +47,7 @@ export const SliderSwatches: FC<SliderSwatchesProps> = ({ onClick, hsl }) => {
           onClick={onClick}
         />
       </div>
-      <div style={styles.swatch as React.CSSProperties}>
+      <div style={baseStyles.swatch}>
         <SliderSwatch
           hsl={hsl}
           offset={0.50}
@@ -59,7 +56,7 @@ export const SliderSwatches: FC<SliderSwatchesProps> = ({ onClick, hsl }) => {
           onClick={onClick}
         />
       </div>
-      <div style={styles.swatch as React.CSSProperties}>
+      <div style={baseStyles.swatch}>
         <SliderSwatch
           hsl={hsl}
           offset={0.35}
@@ -68,7 +65,7 @@ export const SliderSwatches: FC<SliderSwatchesProps> = ({ onClick, hsl }) => {
           onClick={onClick}
         />
       </div>
-      <div style={styles.swatch as React.CSSProperties}>
+      <div style={baseStyles.swatch}>
         <SliderSwatch
           hsl={hsl}
           offset={0.20}
@@ -78,7 +75,7 @@ export const SliderSwatches: FC<SliderSwatchesProps> = ({ onClick, hsl }) => {
           last
         />
       </div>
-      <div style={styles.clear as React.CSSProperties} />
+      <div style={baseStyles.clear} />
     </div>
   )
 }

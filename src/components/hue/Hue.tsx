@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 import { ColorWrap, Hue } from '../common'
 import HuePointer from './HuePointer'
 import { HSL } from '../../types'
@@ -14,6 +13,7 @@ export interface HuePickerProps {
   pointer?: FC<any>;
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const HuePicker: FC<HuePickerProps> = ({
@@ -24,32 +24,32 @@ export const HuePicker: FC<HuePickerProps> = ({
   direction = 'horizontal',
   pointer = HuePointer,
   styles: passedStyles = {},
-  className = ''
+  className = '',
+  style = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      picker: {
-        position: 'relative',
-        width,
-        height,
-      },
-      hue: {
-        radius: '2px',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    picker: {
+      position: 'relative',
+      width,
+      height,
+      ...style,
     },
-  }, passedStyles))
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   // Overwrite to provide pure hue color
   const handleChange = (data: any) => onChange && onChange({ a: 1, h: data.h, l: 0.5, s: 1 })
 
   return (
-    <div style={styles.picker as React.CSSProperties} className={`hue-picker ${className}`}>
+    <div style={styles.picker} className={`hue-picker ${className}`}>
       <Hue
-        {...styles.hue}
         hsl={hsl}
         pointer={pointer}
         onChange={handleChange}
         direction={direction}
+        radius="2px"
+        style={passedStyles?.hue}
       />
     </div>
   )

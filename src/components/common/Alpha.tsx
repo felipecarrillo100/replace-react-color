@@ -1,5 +1,4 @@
 import React, { useRef, FC } from 'react'
-import reactCSS from '../../reactcss'
 import * as alpha from '../../helpers/alpha'
 import { useColorDrag } from '../../helpers/useColorDrag'
 import { HSL, RGB } from '../../types'
@@ -48,89 +47,79 @@ export const Alpha: FC<AlphaProps> = ({
     change && typeof onChange === 'function' && onChange(change, e)
   })
 
-  const styles = reactCSS({
-    'default': {
-      alpha: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        borderRadius: activeRadius,
-      },
-      checkboard: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        overflow: 'hidden',
-        borderRadius: activeRadius,
-      },
-      gradient: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        background: `linear-gradient(to right, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`,
-        boxShadow: activeShadow,
-        borderRadius: activeRadius,
-      },
-      container: {
-        position: 'relative',
-        height: '100%',
-        margin: '0 3px',
-      },
-      pointer: {
-        position: 'absolute',
-        left: `${(rgb.a ?? 1) * 100}%`,
-      },
-      slider: {
-        width: '4px',
-        borderRadius: '1px',
-        height: '8px',
-        boxShadow: '0 0 2px rgba(0, 0, 0, .6)',
-        background: '#fff',
-        marginTop: '1px',
-        transform: 'translateX(-2px)',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    alpha: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      borderRadius: activeRadius,
     },
-    'vertical': {
-      gradient: {
-        background: `linear-gradient(to bottom, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`,
-      },
-      pointer: {
+    checkboard: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      overflow: 'hidden',
+      borderRadius: activeRadius,
+    },
+    gradient: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      background: direction === 'vertical' 
+        ? `linear-gradient(to bottom, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`
+        : `linear-gradient(to right, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`,
+      boxShadow: activeShadow,
+      borderRadius: activeRadius,
+    },
+    container: {
+      position: 'relative',
+      height: '100%',
+      margin: '0 3px',
+    },
+    pointer: {
+      position: 'absolute',
+      ...(direction === 'vertical' ? {
         left: 0,
         top: `${(rgb.a ?? 1) * 100}%`,
-      },
+      } : {
+        left: `${(rgb.a ?? 1) * 100}%`,
+      })
     },
-    'overwrite': {
-      ...style,
+    slider: {
+      width: '4px',
+      borderRadius: '1px',
+      height: '8px',
+      boxShadow: '0 0 2px rgba(0, 0, 0, .6)',
+      background: '#fff',
+      marginTop: '1px',
+      transform: 'translateX(-2px)',
     },
-  }, {
-    vertical: direction === 'vertical',
-    overwrite: true,
-  })
+  }
 
   return (
-    <div style={styles.alpha}>
-      <div style={styles.checkboard}>
+    <div style={baseStyles.alpha}>
+      <div style={baseStyles.checkboard}>
         <Checkboard renderers={renderers} />
       </div>
-      <div style={styles.gradient} />
+      <div style={baseStyles.gradient} />
       <div
-        style={styles.container as React.CSSProperties}
+        style={baseStyles.container}
         ref={container}
         onMouseDown={handleMouseDown}
         onTouchMove={handleTouchStart}
         onTouchStart={handleTouchStart}
       >
-        <div style={styles.pointer as React.CSSProperties}>
+        <div style={baseStyles.pointer}>
           {Pointer ? (
             <Pointer rgb={rgb} hsl={hsl} direction={direction} radius={activeRadius} shadow={activeShadow} a={a} />
           ) : (
-            <div style={styles.slider as React.CSSProperties} />
+            <div style={baseStyles.slider} />
           )}
         </div>
       </div>

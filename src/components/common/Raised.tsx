@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 
 export interface RaisedProps {
   zDepth?: 0 | 1 | 2 | 3 | 4 | 5;
@@ -21,64 +20,41 @@ export const Raised: FC<RaisedProps> = ({
   children,
   styles: passedStyles = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      wrap: {
-        position: 'relative',
-        display: 'inline-block',
-      },
-      content: {
-        position: 'relative',
-      },
-      bg: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        boxShadow: `0 ${zDepth}px ${zDepth * 4}px rgba(0,0,0,.24)`,
-        borderRadius: radius,
-        background,
-      },
+  const zDepthShadows = {
+    0: 'none',
+    1: '0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16)',
+    2: '0 6px 20px rgba(0,0,0,.19), 0 8px 17px rgba(0,0,0,.2)',
+    3: '0 17px 50px rgba(0,0,0,.19), 0 12px 15px rgba(0,0,0,.24)',
+    4: '0 25px 55px rgba(0,0,0,.21), 0 16px 28px rgba(0,0,0,.22)',
+    5: '0 40px 77px rgba(0,0,0,.22), 0 27px 24px rgba(0,0,0,.2)',
+  }
+
+  const baseStyles: Record<string, React.CSSProperties> = {
+    wrap: {
+      position: 'relative',
+      display: 'inline-block',
     },
-    'zDepth-0': {
-      bg: {
-        boxShadow: 'none',
-      },
+    content: {
+      position: 'relative',
     },
-    'zDepth-1': {
-      bg: {
-        boxShadow: '0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16)',
-      },
+    bg: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      boxShadow: zDepthShadows[zDepth] || `0 ${zDepth}px ${zDepth * 4}px rgba(0,0,0,.24)`,
+      borderRadius: radius,
+      background,
     },
-    'zDepth-2': {
-      bg: {
-        boxShadow: '0 6px 20px rgba(0,0,0,.19), 0 8px 17px rgba(0,0,0,.2)',
-      },
-    },
-    'zDepth-3': {
-      bg: {
-        boxShadow: '0 17px 50px rgba(0,0,0,.19), 0 12px 15px rgba(0,0,0,.24)',
-      },
-    },
-    'zDepth-4': {
-      bg: {
-        boxShadow: '0 25px 55px rgba(0,0,0,.21), 0 16px 28px rgba(0,0,0,.22)',
-      },
-    },
-    'zDepth-5': {
-      bg: {
-        boxShadow: '0 40px 77px rgba(0,0,0,.22), 0 27px 24px rgba(0,0,0,.2)',
-      },
-    },
-  }, passedStyles), {
-    [`zDepth-${zDepth}`]: true,
-  })
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   return (
-    <div style={styles.wrap as React.CSSProperties}>
-      <div style={styles.bg as React.CSSProperties} />
-      <div style={styles.content as React.CSSProperties}>
+    <div style={styles.wrap}>
+      <div style={styles.bg} />
+      <div style={styles.content}>
         {children}
       </div>
     </div>

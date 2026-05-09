@@ -1,5 +1,4 @@
 import React, { FC, useState, useEffect, useRef, useCallback } from 'react'
-import reactCSS from '../../reactcss'
 
 const DEFAULT_ARROW_OFFSET = 1
 const UP_KEY_CODE = 38
@@ -142,36 +141,25 @@ export const EditableInput: FC<EditableInputProps> = ({
     }
   }, [])
 
-  const styles = reactCSS({
-    'default': {
-      wrap: {
-        position: 'relative',
-      },
-      input: {
-        ...style.input,
-      },
-      label: {
-        ...style.label,
-      },
-    },
-    'dragLabel-true': {
-      label: {
-        cursor: 'ew-resize',
-      },
-    },
-    'user-override': {
-      wrap: style.wrap || {},
-    },
-  }, {
-    'dragLabel-true': !!dragLabel,
-    'user-override': true,
-  })
+  const baseStyles = {
+    wrap: {
+      position: 'relative',
+      ...style.wrap,
+    } as React.CSSProperties,
+    input: {
+      ...style.input,
+    } as React.CSSProperties,
+    label: {
+      ...(dragLabel ? { cursor: 'ew-resize' } : {}),
+      ...style.label,
+    } as React.CSSProperties,
+  }
 
   return (
-    <div style={styles.wrap as React.CSSProperties}>
+    <div style={baseStyles.wrap}>
       <input
         id={inputId}
-        style={styles.input as React.CSSProperties}
+        style={baseStyles.input}
         ref={inputRef}
         value={value}
         onKeyDown={handleKeyDown}
@@ -183,7 +171,7 @@ export const EditableInput: FC<EditableInputProps> = ({
       {label && !hideLabel ? (
         <label
           htmlFor={inputId}
-          style={styles.label as React.CSSProperties}
+          style={baseStyles.label}
           onMouseDown={handleMouseDown}
         >
           {label}

@@ -1,5 +1,4 @@
 import React, { FC, useState, useEffect, useCallback } from 'react'
-import reactCSS from '../../reactcss'
 import * as color from '../../helpers/color'
 import { EditableInput, UnfoldMoreHorizontalIcon } from '../common'
 import { HSL, RGB } from '../../types'
@@ -107,77 +106,71 @@ export const ChromeFields: FC<ChromeFieldsProps> = ({
     (e.currentTarget as unknown as HTMLElement).style.background = 'transparent'
   }
 
-  const styles = reactCSS({
-    'default': {
-      wrap: {
-        paddingTop: '16px',
-        display: 'flex',
-      },
-      fields: {
-        flex: '1',
-        display: 'flex',
-        marginLeft: '-6px',
-      },
-      field: {
-        paddingLeft: '6px',
-        width: '100%',
-      },
-      alpha: {
-        paddingLeft: '6px',
-        width: '100%',
-      },
-      toggle: {
-        width: '32px',
-        textAlign: 'right',
-        position: 'relative',
-      },
-      icon: {
-        marginRight: '-4px',
-        marginTop: '12px',
-        cursor: 'pointer',
-        position: 'relative',
-      },
-      input: {
-        fontSize: '11px',
-        color: '#333',
-        width: '100%',
-        borderRadius: '2px',
-        border: 'none',
-        boxShadow: 'inset 0 0 0 1px #dadada',
-        height: '21px',
-        textAlign: 'center',
-      },
-      label: {
-        textTransform: 'uppercase',
-        fontSize: '11px',
-        lineHeight: '11px',
-        color: '#969696',
-        textAlign: 'center',
-        display: 'block',
-        marginTop: '12px',
-      },
-      svg: {
-        fill: '#333',
-        width: '24px',
-        height: '24px',
-        border: '1px transparent solid',
-        borderRadius: '5px',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    wrap: {
+      paddingTop: '16px',
+      display: 'flex',
     },
-    'disableAlpha': {
-      alpha: {
-        display: 'none',
-      },
+    fields: {
+      flex: '1',
+      display: 'flex',
+      marginLeft: '-6px',
     },
-  }, { disableAlpha })
+    field: {
+      paddingLeft: '6px',
+      width: '100%',
+    },
+    alpha: {
+      paddingLeft: '6px',
+      width: '100%',
+      display: disableAlpha ? 'none' : 'block',
+    },
+    toggle: {
+      width: '32px',
+      textAlign: 'right',
+      position: 'relative',
+    },
+    icon: {
+      marginRight: '-4px',
+      marginTop: '12px',
+      cursor: 'pointer',
+      position: 'relative',
+    },
+    input: {
+      fontSize: '11px',
+      color: '#333',
+      width: '100%',
+      borderRadius: '2px',
+      border: 'none',
+      boxShadow: 'inset 0 0 0 1px #dadada',
+      height: '21px',
+      textAlign: 'center',
+    },
+    label: {
+      textTransform: 'uppercase',
+      fontSize: '11px',
+      lineHeight: '11px',
+      color: '#969696',
+      textAlign: 'center',
+      display: 'block',
+      marginTop: '12px',
+    },
+    svg: {
+      fill: '#333',
+      width: '24px',
+      height: '24px',
+      border: '1px transparent solid',
+      borderRadius: '5px',
+    },
+  }
 
   let fields
   if (view === 'hex') {
     fields = (
-      <div style={styles.fields as React.CSSProperties} className="flexbox-fix">
-        <div style={styles.field as React.CSSProperties}>
+      <div style={baseStyles.fields} className="flexbox-fix">
+        <div style={baseStyles.field}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="hex" value={hex}
             onChange={handleChange}
           />
@@ -186,34 +179,34 @@ export const ChromeFields: FC<ChromeFieldsProps> = ({
     )
   } else if (view === 'rgb') {
     fields = (
-      <div style={styles.fields as React.CSSProperties} className="flexbox-fix">
-        <div style={styles.field as React.CSSProperties}>
+      <div style={baseStyles.fields} className="flexbox-fix">
+        <div style={baseStyles.field}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="r"
             value={rgb.r}
             onChange={handleChange}
           />
         </div>
-        <div style={styles.field as React.CSSProperties}>
+        <div style={baseStyles.field}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="g"
             value={rgb.g}
             onChange={handleChange}
           />
         </div>
-        <div style={styles.field as React.CSSProperties}>
+        <div style={baseStyles.field}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="b"
             value={rgb.b}
             onChange={handleChange}
           />
         </div>
-        <div style={styles.alpha as React.CSSProperties}>
+        <div style={baseStyles.alpha}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="a"
             value={rgb.a ?? 1}
             arrowOffset={0.01}
@@ -224,34 +217,34 @@ export const ChromeFields: FC<ChromeFieldsProps> = ({
     )
   } else if (view === 'hsl') {
     fields = (
-      <div style={styles.fields as React.CSSProperties} className="flexbox-fix">
-        <div style={styles.field as React.CSSProperties}>
+      <div style={baseStyles.fields} className="flexbox-fix">
+        <div style={baseStyles.field}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="h"
             value={Math.round(hsl.h)}
             onChange={handleChange}
           />
         </div>
-        <div style={styles.field as React.CSSProperties}>
+        <div style={baseStyles.field}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="s"
             value={`${Math.round(hsl.s * 100)}%`}
             onChange={handleChange}
           />
         </div>
-        <div style={styles.field as React.CSSProperties}>
+        <div style={baseStyles.field}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="l"
             value={`${Math.round(hsl.l * 100)}%`}
             onChange={handleChange}
           />
         </div>
-        <div style={styles.alpha as React.CSSProperties}>
+        <div style={baseStyles.alpha}>
           <EditableInput
-            style={{ input: styles.input, label: styles.label }}
+            style={{ input: baseStyles.input, label: baseStyles.label }}
             label="a"
             value={hsl.a ?? 1}
             arrowOffset={0.01}
@@ -263,12 +256,12 @@ export const ChromeFields: FC<ChromeFieldsProps> = ({
   }
 
   return (
-    <div style={styles.wrap as React.CSSProperties} className="flexbox-fix">
+    <div style={baseStyles.wrap} className="flexbox-fix">
       {fields}
-      <div style={styles.toggle as React.CSSProperties}>
-        <div style={styles.icon as React.CSSProperties} onClick={toggleViews}>
+      <div style={baseStyles.toggle}>
+        <div style={baseStyles.icon} onClick={toggleViews}>
           <UnfoldMoreHorizontalIcon
-            style={styles.svg}
+            style={baseStyles.svg}
             onMouseOver={showHighlight}
             onMouseEnter={showHighlight}
             onMouseOut={hideHighlight}

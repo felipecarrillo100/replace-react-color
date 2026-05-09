@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
 import SwatchesColor from './SwatchesColor'
 
 export interface SwatchesGroupProps {
@@ -10,19 +9,15 @@ export interface SwatchesGroupProps {
 }
 
 export const SwatchesGroup: FC<SwatchesGroupProps> = ({ onClick, onSwatchHover, group, active }) => {
-  const styles = reactCSS({
-    'default': {
-      group: {
-        paddingBottom: '10px',
-        width: '40px',
-        float: 'left',
-        marginRight: '10px',
-      },
-    },
-  })
+  const groupStyle: React.CSSProperties = {
+    paddingBottom: '10px',
+    width: '40px',
+    float: 'left',
+    marginRight: '10px',
+  }
 
   return (
-    <div style={styles.group as React.CSSProperties}>
+    <div style={groupStyle}>
       {group.map((color: string, i) => (
         <SwatchesColor
           key={color}

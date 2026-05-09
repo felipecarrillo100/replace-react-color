@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
 import { Swatch } from '../common'
 
 export interface BlockSwatchesProps {
@@ -9,32 +8,30 @@ export interface BlockSwatchesProps {
 }
 
 export const BlockSwatches: FC<BlockSwatchesProps> = ({ colors, onClick, onSwatchHover }) => {
-  const styles = reactCSS({
-    'default': {
-      swatches: {
-        marginRight: '-10px',
-      },
-      swatch: {
-        width: '22px',
-        height: '22px',
-        float: 'left',
-        marginRight: '10px',
-        marginBottom: '10px',
-        borderRadius: '4px',
-      },
-      clear: {
-        clear: 'both',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    swatches: {
+      marginRight: '-10px',
     },
-  })
+    swatch: {
+      width: '22px',
+      height: '22px',
+      float: 'left',
+      marginRight: '10px',
+      marginBottom: '10px',
+      borderRadius: '4px',
+    },
+    clear: {
+      clear: 'both',
+    },
+  }
 
   return (
-    <div style={styles.swatches as React.CSSProperties}>
+    <div style={baseStyles.swatches}>
       {colors.map((c: string) => (
         <Swatch
           key={c}
           color={c}
-          style={styles.swatch as React.CSSProperties}
+          style={baseStyles.swatch}
           onClick={onClick}
           onHover={onSwatchHover}
           focusStyle={{
@@ -42,7 +39,7 @@ export const BlockSwatches: FC<BlockSwatchesProps> = ({ colors, onClick, onSwatc
           }}
         />
       ))}
-      <div style={styles.clear as React.CSSProperties} />
+      <div style={baseStyles.clear} />
     </div>
   )
 }

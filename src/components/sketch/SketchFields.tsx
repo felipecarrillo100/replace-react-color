@@ -1,5 +1,4 @@
 import React, { FC, useCallback } from 'react'
-import reactCSS from '../../reactcss'
 import * as color from '../../helpers/color'
 import { EditableInput } from '../common'
 import { HSL, RGB } from '../../types'
@@ -19,46 +18,40 @@ export const SketchFields: FC<SketchFieldsProps> = ({
   hex,
   disableAlpha
 }) => {
-  const styles = reactCSS({
-    'default': {
-      fields: {
-        display: 'flex',
-        paddingTop: '4px',
-      },
-      single: {
-        flex: '1',
-        paddingLeft: '6px',
-      },
-      alpha: {
-        flex: '1',
-        paddingLeft: '6px',
-      },
-      double: {
-        flex: '2',
-      },
-      input: {
-        width: '80%',
-        padding: '4px 10% 3px',
-        border: 'none',
-        boxShadow: 'inset 0 0 0 1px #ccc',
-        fontSize: '11px',
-      },
-      label: {
-        display: 'block',
-        textAlign: 'center',
-        fontSize: '11px',
-        color: '#222',
-        paddingTop: '3px',
-        paddingBottom: '4px',
-        textTransform: 'capitalize',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    fields: {
+      display: 'flex',
+      paddingTop: '4px',
     },
-    'disableAlpha': {
-      alpha: {
-        display: 'none',
-      },
+    single: {
+      flex: '1',
+      paddingLeft: '6px',
     },
-  }, { disableAlpha })
+    alpha: {
+      flex: '1',
+      paddingLeft: '6px',
+      display: disableAlpha ? 'none' : 'block',
+    },
+    double: {
+      flex: '2',
+    },
+    input: {
+      width: '80%',
+      padding: '4px 10% 3px',
+      border: 'none',
+      boxShadow: 'inset 0 0 0 1px #ccc',
+      fontSize: '11px',
+    },
+    label: {
+      display: 'block',
+      textAlign: 'center',
+      fontSize: '11px',
+      color: '#222',
+      paddingTop: '3px',
+      paddingBottom: '4px',
+      textTransform: 'capitalize',
+    },
+  }
 
   const handleChange = useCallback((data: any, e: any) => {
     if (!onChange) return
@@ -96,18 +89,18 @@ export const SketchFields: FC<SketchFieldsProps> = ({
   }, [onChange, rgb, hsl])
 
   return (
-    <div style={styles.fields as React.CSSProperties} className="flexbox-fix">
-      <div style={styles.double as React.CSSProperties}>
+    <div style={baseStyles.fields} className="flexbox-fix">
+      <div style={baseStyles.double}>
         <EditableInput
-          style={{ input: styles.input, label: styles.label }}
+          style={{ input: baseStyles.input, label: baseStyles.label }}
           label="hex"
           value={hex.replace('#', '')}
           onChange={handleChange}
         />
       </div>
-      <div style={styles.single as React.CSSProperties}>
+      <div style={baseStyles.single}>
         <EditableInput
-          style={{ input: styles.input, label: styles.label }}
+          style={{ input: baseStyles.input, label: baseStyles.label }}
           label="r"
           value={rgb.r}
           onChange={handleChange}
@@ -115,9 +108,9 @@ export const SketchFields: FC<SketchFieldsProps> = ({
           dragMax={255}
         />
       </div>
-      <div style={styles.single as React.CSSProperties}>
+      <div style={baseStyles.single}>
         <EditableInput
-          style={{ input: styles.input, label: styles.label }}
+          style={{ input: baseStyles.input, label: baseStyles.label }}
           label="g"
           value={rgb.g}
           onChange={handleChange}
@@ -125,9 +118,9 @@ export const SketchFields: FC<SketchFieldsProps> = ({
           dragMax={255}
         />
       </div>
-      <div style={styles.single as React.CSSProperties}>
+      <div style={baseStyles.single}>
         <EditableInput
-          style={{ input: styles.input, label: styles.label }}
+          style={{ input: baseStyles.input, label: baseStyles.label }}
           label="b"
           value={rgb.b}
           onChange={handleChange}
@@ -135,9 +128,9 @@ export const SketchFields: FC<SketchFieldsProps> = ({
           dragMax={255}
         />
       </div>
-      <div style={styles.alpha as React.CSSProperties}>
+      <div style={baseStyles.alpha}>
         <EditableInput
-          style={{ input: styles.input, label: styles.label }}
+          style={{ input: baseStyles.input, label: baseStyles.label }}
           label="a"
           value={Math.round((rgb.a ?? 1) * 100)}
           onChange={handleChange}

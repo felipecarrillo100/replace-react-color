@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, ComponentType } from 'react'
-import { debounce } from '../../helpers/utils'
+import { debounce } from '../../helpers/debounce'
 import * as color from '../../helpers/color'
 import { Color, ColorState } from '../../types'
 
@@ -8,6 +8,8 @@ export interface ColorWrapProps {
   onChange?: (color: ColorState, event: React.ChangeEvent<any> | MouseEvent | TouchEvent) => void;
   onChangeComplete?: (color: ColorState, event: React.ChangeEvent<any> | MouseEvent | TouchEvent) => void;
   onSwatchHover?: (color: ColorState, event: MouseEvent) => void;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export const ColorWrap = <P extends object>(Picker: ComponentType<P & ColorState & { onChange: any, onSwatchHover?: any }>) => {

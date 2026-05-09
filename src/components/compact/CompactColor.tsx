@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
 import * as colorUtils from '../../helpers/color'
 import { Swatch } from '../common'
 
@@ -16,58 +15,42 @@ export const CompactColor: FC<CompactColorProps> = ({
   onSwatchHover,
   active
 }) => {
-  const styles = reactCSS({
-    'default': {
-      color: {
-        background: color,
-        width: '15px',
-        height: '15px',
-        float: 'left',
-        marginRight: '5px',
-        marginBottom: '5px',
-        position: 'relative',
-        cursor: 'pointer',
-      },
-      dot: {
-        position: 'absolute',
-        top: '5px',
-        right: '5px',
-        bottom: '5px',
-        left: '5px',
-        background: colorUtils.getContrastingColor(color),
-        borderRadius: '50%',
-        opacity: '0',
-      },
+  const isWhite = color.toUpperCase() === '#FFFFFF'
+  const isTransparent = color === 'transparent'
+
+  const baseStyles: Record<string, React.CSSProperties> = {
+    color: {
+      background: color,
+      width: '15px',
+      height: '15px',
+      float: 'left',
+      marginRight: '5px',
+      marginBottom: '5px',
+      position: 'relative',
+      cursor: 'pointer',
+      ...(isWhite ? { boxShadow: 'inset 0 0 0 1px #ddd' } : {}),
     },
-    'active': {
-      dot: {
-        opacity: '1',
-      },
+    dot: {
+      position: 'absolute',
+      top: '5px',
+      right: '5px',
+      bottom: '5px',
+      left: '5px',
+      background: (isWhite || isTransparent) ? '#000' : colorUtils.getContrastingColor(color),
+      borderRadius: '50%',
+      opacity: active ? '1' : '0',
     },
-    'color-#FFFFFF': {
-      color: {
-        boxShadow: 'inset 0 0 0 1px #ddd',
-      },
-      dot: {
-        background: '#000',
-      },
-    },
-    'transparent': {
-      dot: {
-        background: '#000',
-      },
-    },
-  }, { active, 'color-#FFFFFF': color.toUpperCase() === '#FFFFFF', 'transparent': color === 'transparent' })
+  }
 
   return (
     <Swatch
-      style={styles.color as React.CSSProperties}
+      style={baseStyles.color}
       color={color}
       onClick={onClick}
       onHover={onSwatchHover}
       focusStyle={{ boxShadow: `0 0 4px ${color}` }}
     >
-      <div style={styles.dot as React.CSSProperties} />
+      <div style={baseStyles.dot} />
     </Swatch>
   )
 }

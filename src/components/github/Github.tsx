@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 import { ColorWrap } from '../common'
 import GithubSwatch from './GithubSwatch'
 
@@ -12,6 +11,7 @@ export interface GithubProps {
   triangle?: 'hide' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Github: FC<GithubProps> = ({
@@ -22,98 +22,52 @@ export const Github: FC<GithubProps> = ({
   onSwatchHover,
   triangle = 'top-left',
   styles: passedStyles = {},
-  className = ''
+  className = '',
+  style = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      card: {
-        width,
-        background: '#fff',
-        border: '1px solid rgba(0,0,0,0.2)',
-        boxShadow: '0 3px 12px rgba(0,0,0,0.15)',
-        borderRadius: '4px',
-        position: 'relative',
-        padding: '5px',
-        display: 'flex',
-        flexWrap: 'wrap',
-      },
-      triangle: {
-        position: 'absolute',
-        border: '7px solid transparent',
-        borderBottomColor: '#fff',
-      },
-      triangleShadow: {
-        position: 'absolute',
-        border: '8px solid transparent',
-        borderBottomColor: 'rgba(0,0,0,0.15)',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    card: {
+      width,
+      background: '#fff',
+      border: '1px solid rgba(0,0,0,0.2)',
+      boxShadow: '0 3px 12px rgba(0,0,0,0.15)',
+      borderRadius: '4px',
+      position: 'relative',
+      padding: '5px',
+      display: 'flex',
+      flexWrap: 'wrap',
+      ...style,
     },
-    'hide-triangle': {
-      triangle: {
-        display: 'none',
-      },
-      triangleShadow: {
-        display: 'none',
-      },
+    triangle: {
+      position: 'absolute',
+      border: '7px solid transparent',
+      borderBottomColor: '#fff',
+      display: triangle === 'hide' ? 'none' : 'block',
+      ...(triangle === 'top-left' ? { top: '-14px', left: '10px' } : {}),
+      ...(triangle === 'top-right' ? { top: '-14px', right: '10px' } : {}),
+      ...(triangle === 'bottom-left' ? { top: '35px', left: '10px', transform: 'rotate(180deg)' } : {}),
+      ...(triangle === 'bottom-right' ? { top: '35px', right: '10px', transform: 'rotate(180deg)' } : {}),
     },
-    'top-left-triangle': {
-      triangle: {
-        top: '-14px',
-        left: '10px',
-      },
-      triangleShadow: {
-        top: '-16px',
-        left: '9px',
-      },
+    triangleShadow: {
+      position: 'absolute',
+      border: '8px solid transparent',
+      borderBottomColor: 'rgba(0,0,0,0.15)',
+      display: triangle === 'hide' ? 'none' : 'block',
+      ...(triangle === 'top-left' ? { top: '-16px', left: '9px' } : {}),
+      ...(triangle === 'top-right' ? { top: '-16px', right: '9px' } : {}),
+      ...(triangle === 'bottom-left' ? { top: '37px', left: '9px', transform: 'rotate(180deg)' } : {}),
+      ...(triangle === 'bottom-right' ? { top: '37px', right: '9px', transform: 'rotate(180deg)' } : {}),
     },
-    'top-right-triangle': {
-      triangle: {
-        top: '-14px',
-        right: '10px',
-      },
-      triangleShadow: {
-        top: '-16px',
-        right: '9px',
-      },
-    },
-    'bottom-left-triangle': {
-      triangle: {
-        top: '35px',
-        left: '10px',
-        transform: 'rotate(180deg)',
-      },
-      triangleShadow: {
-        top: '37px',
-        left: '9px',
-        transform: 'rotate(180deg)',
-      },
-    },
-    'bottom-right-triangle': {
-      triangle: {
-        top: '35px',
-        right: '10px',
-        transform: 'rotate(180deg)',
-      },
-      triangleShadow: {
-        top: '37px',
-        right: '9px',
-        transform: 'rotate(180deg)',
-      },
-    },
-  }, passedStyles), {
-    'hide-triangle': triangle === 'hide',
-    'top-left-triangle': triangle === 'top-left',
-    'top-right-triangle': triangle === 'top-right',
-    'bottom-left-triangle': triangle === 'bottom-left',
-    'bottom-right-triangle': triangle === 'bottom-right',
-  })
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   const handleChange = (hex: string, e: any) => onChange && onChange({ hex, source: 'hex' }, e)
 
   return (
-    <div style={styles.card as React.CSSProperties} className={`github-picker ${className}`}>
-      <div style={styles.triangleShadow as React.CSSProperties} />
-      <div style={styles.triangle as React.CSSProperties} />
+    <div style={styles.card} className={`github-picker ${className}`}>
+      <div style={styles.triangleShadow} />
+      <div style={styles.triangle} />
       {colors.map((c: string) => (
         <GithubSwatch
           color={c}

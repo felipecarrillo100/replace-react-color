@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
+import { mergeStyles } from '../../helpers/styles'
 import { ColorWrap, Alpha } from '../common'
 import AlphaPointer from './AlphaPointer'
 import { HSL, RGB } from '../../types'
@@ -11,6 +11,7 @@ export interface AlphaPickerProps {
   height?: string | number;
   onChange?: (color: any, e: any) => void;
   direction?: 'horizontal' | 'vertical';
+  /** Legacy styles prop */
   style?: any;
   renderers?: any;
   pointer?: FC<any>;
@@ -24,35 +25,32 @@ export const AlphaPicker: FC<AlphaPickerProps> = ({
   height = '16px',
   onChange,
   direction = 'horizontal',
-  style,
+  style: legacyStyles,
   renderers,
   pointer = AlphaPointer,
   className = ''
 }) => {
-  const styles = reactCSS({
-    'default': {
-      picker: {
-        position: 'relative',
-        width,
-        height,
-      },
-      alpha: {
-        radius: '2px',
-        style,
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    picker: {
+      position: 'relative',
+      width,
+      height,
     },
-  })
+  }
+
+  const styles = mergeStyles(baseStyles, legacyStyles)
 
   return (
-    <div style={styles.picker as React.CSSProperties} className={`alpha-picker ${className}`}>
+    <div style={styles.picker} className={`alpha-picker ${className}`}>
       <Alpha
-        {...styles.alpha}
         rgb={rgb}
         hsl={hsl}
         pointer={pointer}
         renderers={renderers}
         onChange={onChange}
         direction={direction}
+        radius="2px"
+        style={legacyStyles?.alpha}
       />
     </div>
   )

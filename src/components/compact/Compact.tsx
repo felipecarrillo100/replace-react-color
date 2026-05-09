@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 import * as color from '../../helpers/color'
 import { ColorWrap, Raised } from '../common'
 import CompactColor from './CompactColor'
@@ -15,6 +14,7 @@ export interface CompactProps {
   rgb: RGB;
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Compact: FC<CompactProps> = ({
@@ -30,25 +30,27 @@ export const Compact: FC<CompactProps> = ({
   hex,
   rgb,
   styles: passedStyles = {},
-  className = ''
+  className = '',
+  style = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      Compact: {
-        background: '#f6f6f6',
-        borderRadius: '4px',
-      },
-      compact: {
-        paddingTop: '5px',
-        paddingLeft: '5px',
-        boxSizing: 'initial',
-        width: '240px',
-      },
-      clear: {
-        clear: 'both',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    Compact: {
+      background: '#f6f6f6',
+      borderRadius: '4px',
     },
-  }, passedStyles))
+    compact: {
+      paddingTop: '5px',
+      paddingLeft: '5px',
+      boxSizing: 'initial',
+      width: '240px',
+      ...style,
+    },
+    clear: {
+      clear: 'both',
+    },
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   const handleChange = (data: any, e: any) => {
     if (!onChange) return
@@ -64,7 +66,7 @@ export const Compact: FC<CompactProps> = ({
 
   return (
     <Raised styles={{ wrap: styles.Compact } as any}>
-      <div style={styles.compact as React.CSSProperties} className={`compact-picker ${className}`}>
+      <div style={styles.compact} className={`compact-picker ${className}`}>
         <div>
           {colors.map((c: string) => (
             <CompactColor
@@ -75,7 +77,7 @@ export const Compact: FC<CompactProps> = ({
               onSwatchHover={onSwatchHover}
             />
           ))}
-          <div style={styles.clear as React.CSSProperties} />
+          <div style={styles.clear} />
         </div>
         <CompactFields hex={hex} rgb={rgb} onChange={handleChange} />
       </div>

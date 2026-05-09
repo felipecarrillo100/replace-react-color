@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
 import { Swatch } from '../common'
 
 export interface SketchPresetColor {
@@ -18,34 +17,25 @@ export const SketchPresetColors: FC<SketchPresetColorsProps> = ({
   onClick = () => {},
   onSwatchHover
 }) => {
-  const styles = reactCSS({
-    'default': {
-      colors: {
-        margin: '0 -10px',
-        padding: '10px 0 0 10px',
-        borderTop: '1px solid #eee',
-        display: 'flex',
-        flexWrap: 'wrap',
-        position: 'relative',
-      },
-      swatchWrap: {
-        width: '16px',
-        height: '16px',
-        margin: '0 10px 10px 0',
-      },
-      swatch: {
-        borderRadius: '3px',
-        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15)',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    colors: {
+      margin: '0 -10px',
+      padding: '10px 0 0 10px',
+      borderTop: '1px solid #eee',
+      display: (!colors || !colors.length) ? 'none' : 'flex',
+      flexWrap: 'wrap',
+      position: 'relative',
     },
-    'no-presets': {
-      colors: {
-        display: 'none',
-      },
+    swatchWrap: {
+      width: '16px',
+      height: '16px',
+      margin: '0 10px 10px 0',
     },
-  }, {
-    'no-presets': !colors || !colors.length,
-  })
+    swatch: {
+      borderRadius: '3px',
+      boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15)',
+    },
+  }
 
   const handleClick = (hex: string, e: React.MouseEvent | React.KeyboardEvent) => {
     onClick({
@@ -55,17 +45,17 @@ export const SketchPresetColors: FC<SketchPresetColorsProps> = ({
   }
 
   return (
-    <div style={styles.colors as React.CSSProperties} className="flexbox-fix">
+    <div style={baseStyles.colors} className="flexbox-fix">
       {colors.map((colorObjOrString) => {
         const c = typeof colorObjOrString === 'string'
           ? { color: colorObjOrString }
           : colorObjOrString
         const key = `${c.color}${c.title || ''}`
         return (
-          <div key={key} style={styles.swatchWrap as React.CSSProperties}>
+          <div key={key} style={baseStyles.swatchWrap}>
             <Swatch
               {...c}
-              style={styles.swatch}
+              style={baseStyles.swatch}
               onClick={handleClick}
               onHover={onSwatchHover}
               focusStyle={{

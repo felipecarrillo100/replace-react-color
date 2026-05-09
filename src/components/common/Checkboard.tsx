@@ -1,5 +1,4 @@
 import React, { isValidElement, FC, ReactElement } from 'react'
-import reactCSS from '../../reactcss'
 import * as checkboard from '../../helpers/checkboard'
 
 export interface CheckboardProps {
@@ -23,30 +22,26 @@ export const Checkboard: FC<CheckboardProps> = ({
   boxShadow,
   children
 }) => {
-  const styles = reactCSS({
-    'default': {
-      grid: {
-        borderRadius,
-        boxShadow,
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        background: `url(${checkboard.get(white, grey, size, renderers.canvas)}) center left`,
-      },
-    },
-  })
+  const gridStyle: React.CSSProperties = {
+    borderRadius,
+    boxShadow,
+    position: 'absolute',
+    top: '0px',
+    right: '0px',
+    bottom: '0px',
+    left: '0px',
+    background: `url(${checkboard.get(white, grey, size, renderers.canvas)}) center left`,
+  }
 
   if (isValidElement(children)) {
     const child = children as ReactElement<any>
     return React.cloneElement(child, {
       ...child.props,
-      style: { ...child.props.style, ...styles.grid }
+      style: { ...child.props.style, ...gridStyle }
     })
   }
 
-  return <div style={styles.grid as React.CSSProperties} />
+  return <div style={gridStyle} />
 }
 
 export default Checkboard

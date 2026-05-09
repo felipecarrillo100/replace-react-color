@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react'
-import reactCSS from '../../reactcss'
 import { Swatch } from '../common'
 
 export interface GithubSwatchProps {
@@ -11,29 +10,23 @@ export interface GithubSwatchProps {
 export const GithubSwatch: FC<GithubSwatchProps> = ({ color, onClick, onSwatchHover }) => {
   const [hover, setHover] = useState(false)
 
-  const hoverSwatch = {
-    position: 'relative' as const,
-    zIndex: '2',
+  const hoverSwatch: React.CSSProperties = {
+    position: 'relative',
+    zIndex: 2,
     outline: '2px solid #fff',
     boxShadow: '0 0 5px 2px rgba(0,0,0,0.25)',
   }
 
-  const styles = reactCSS({
-    'default': {
-      swatch: {
-        width: '25px',
-        height: '25px',
-        fontSize: '0',
-      },
-    },
-    'hover': {
-      swatch: hoverSwatch,
-    },
-  }, { hover })
+  const swatchStyle: React.CSSProperties = {
+    width: '25px',
+    height: '25px',
+    fontSize: '0',
+    ...(hover ? hoverSwatch : {}),
+  }
 
   return (
     <div
-      style={styles.swatch as React.CSSProperties}
+      style={swatchStyle}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >

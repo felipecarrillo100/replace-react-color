@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 import { materialColors as material } from '../../constants/material-colors'
 import { ColorWrap } from '../common'
 import CircleSwatch from './CircleSwatch'
@@ -15,6 +14,7 @@ export interface CircleProps {
   circleSpacing?: number;
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Circle: FC<CircleProps> = ({
@@ -33,24 +33,26 @@ export const Circle: FC<CircleProps> = ({
   circleSize = 28,
   circleSpacing = 14,
   styles: passedStyles = {},
-  className = ''
+  className = '',
+  style = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      card: {
-        width,
-        display: 'flex',
-        flexWrap: 'wrap',
-        marginRight: -circleSpacing,
-        marginBottom: -circleSpacing,
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    card: {
+      width,
+      display: 'flex',
+      flexWrap: 'wrap',
+      marginRight: -circleSpacing,
+      marginBottom: -circleSpacing,
+      ...style,
     },
-  }, passedStyles))
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   const handleChange = (hexCode: string, e: any) => onChange && onChange({ hex: hexCode, source: 'hex' }, e)
 
   return (
-    <div style={styles.card as React.CSSProperties} className={`circle-picker ${className}`}>
+    <div style={styles.card} className={`circle-picker ${className}`}>
       {colors.map((c: string) => (
         <CircleSwatch
           key={c}

@@ -1,5 +1,4 @@
 import React, { FC, ReactNode } from 'react'
-import reactCSS from '../../reactcss'
 import { handleFocus } from '../../helpers/interaction'
 import Checkboard from './Checkboard'
 
@@ -27,20 +26,16 @@ export const Swatch: FC<SwatchProps> = ({
   focusStyle = {}
 }) => {
   const transparent = color === 'transparent'
-  const styles = reactCSS({
-    default: {
-      swatch: {
-        background: color,
-        height: '100%',
-        width: '100%',
-        cursor: 'pointer',
-        position: 'relative',
-        outline: 'none',
-        ...style,
-        ...(focus ? focusStyle : {}),
-      },
-    },
-  })
+  const swatchStyle: React.CSSProperties = {
+    background: color,
+    height: '100%',
+    width: '100%',
+    cursor: 'pointer',
+    position: 'relative',
+    outline: 'none',
+    ...style,
+    ...(focus ? focusStyle : {}),
+  }
 
   const handleClick = (e: React.MouseEvent) => onClick(color, e)
   const handleKeyDown = (e: React.KeyboardEvent) => e.keyCode === ENTER && onClick(color, e)
@@ -53,7 +48,7 @@ export const Swatch: FC<SwatchProps> = ({
 
   return (
     <div
-      style={styles.swatch as React.CSSProperties}
+      style={swatchStyle}
       onClick={handleClick}
       title={title}
       tabIndex={0}
@@ -63,7 +58,7 @@ export const Swatch: FC<SwatchProps> = ({
       {children}
       {transparent && (
         <Checkboard
-          borderRadius={(styles.swatch as any).borderRadius}
+          borderRadius={swatchStyle.borderRadius}
           boxShadow="inset 0 0 0 1px rgba(0,0,0,0.1)"
         />
       )}

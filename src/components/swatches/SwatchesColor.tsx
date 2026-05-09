@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
 import * as colorUtils from '../../helpers/color'
 import { Swatch, CheckIcon } from '../common'
 
@@ -20,68 +19,35 @@ export const SwatchesColor: FC<SwatchesColorProps> = ({
   last,
   active
 }) => {
-  const styles = reactCSS({
-    'default': {
-      color: {
-        width: '40px',
-        height: '24px',
-        cursor: 'pointer',
-        background: color,
-        marginBottom: '1px',
-      },
-      check: {
-        color: colorUtils.getContrastingColor(color),
-        marginLeft: '8px',
-        display: 'none',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    color: {
+      width: '40px',
+      height: '24px',
+      cursor: 'pointer',
+      background: color,
+      marginBottom: '1px',
+      ...(first ? { overflow: 'hidden', borderRadius: '2px 2px 0 0' } : {}),
+      ...(last ? { overflow: 'hidden', borderRadius: '0 0 2px 2px' } : {}),
+      ...(color.toUpperCase() === '#FFFFFF' ? { boxShadow: 'inset 0 0 0 1px #ddd' } : {}),
     },
-    'first': {
-      color: {
-        overflow: 'hidden',
-        borderRadius: '2px 2px 0 0',
-      },
+    check: {
+      color: (color.toUpperCase() === '#FFFFFF' || color === 'transparent')
+        ? '#333'
+        : colorUtils.getContrastingColor(color),
+      marginLeft: '8px',
+      display: active ? 'block' : 'none',
     },
-    'last': {
-      color: {
-        overflow: 'hidden',
-        borderRadius: '0 0 2px 2px',
-      },
-    },
-    'active': {
-      check: {
-        display: 'block',
-      },
-    },
-    'color-#FFFFFF': {
-      color: {
-        boxShadow: 'inset 0 0 0 1px #ddd',
-      },
-      check: {
-        color: '#333',
-      },
-    },
-    'transparent': {
-      check: {
-        color: '#333',
-      },
-    },
-  }, {
-    first,
-    last,
-    active,
-    'color-#FFFFFF': color.toUpperCase() === '#FFFFFF',
-    'transparent': color === 'transparent',
-  })
+  }
 
   return (
     <Swatch
       color={color}
-      style={styles.color as React.CSSProperties}
+      style={baseStyles.color}
       onClick={onClick}
       onHover={onSwatchHover}
       focusStyle={{ boxShadow: `0 0 4px ${color}` }}
     >
-      <div style={styles.check as React.CSSProperties}>
+      <div style={baseStyles.check}>
         <CheckIcon />
       </div>
     </Swatch>

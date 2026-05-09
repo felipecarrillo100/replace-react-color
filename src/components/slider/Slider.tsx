@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 import { ColorWrap, Hue } from '../common'
 import SliderSwatches from './SliderSwatches'
 import SliderPointer from './SliderPointer'
@@ -12,6 +11,7 @@ export interface SliderProps {
   pointer?: FC<any>;
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Slider: FC<SliderProps> = ({
@@ -19,25 +19,28 @@ export const Slider: FC<SliderProps> = ({
   onChange,
   pointer = SliderPointer,
   styles: passedStyles = {},
-  className = ''
+  className = '',
+  style = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      hue: {
-        height: '12px',
-        position: 'relative',
-      },
-      Hue: {
-        radius: '2px',
-      },
-      wrap: {},
-      swatches: {},
+  const baseStyles: any = {
+    hue: {
+      height: '12px',
+      position: 'relative',
     },
-  }, passedStyles))
+    Hue: {
+      radius: '2px',
+    },
+    wrap: {
+      ...style,
+    },
+    swatches: {},
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   return (
-    <div style={styles.wrap as React.CSSProperties} className={`slider-picker ${className}`}>
-      <div style={styles.hue as React.CSSProperties}>
+    <div style={styles.wrap} className={`slider-picker ${className}`}>
+      <div style={styles.hue}>
         <Hue
           style={styles.Hue}
           hsl={hsl}
@@ -45,7 +48,7 @@ export const Slider: FC<SliderProps> = ({
           onChange={onChange}
         />
       </div>
-      <div style={styles.swatches as React.CSSProperties}>
+      <div style={styles.swatches}>
         <SliderSwatches hsl={hsl} onClick={onChange} />
       </div>
     </div>

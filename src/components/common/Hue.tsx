@@ -1,5 +1,4 @@
 import React, { FC, useRef } from 'react'
-import reactCSS from '../../reactcss'
 import * as hue from '../../helpers/hue'
 import { useColorDrag } from '../../helpers/useColorDrag'
 import { HSL } from '../../types'
@@ -43,50 +42,47 @@ export const Hue: FC<HueProps> = ({
     change && typeof onChangeRef.current === 'function' && onChangeRef.current(change, e)
   })
 
-  const styles = reactCSS({
-    'default': {
-      hue: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        borderRadius: activeRadius,
-        boxShadow: activeShadow,
-      },
-      container: {
-        padding: '0 2px',
-        position: 'relative',
-        height: '100%',
-        borderRadius: activeRadius,
-      },
-      pointer: {
-        position: 'absolute',
-        left: `${(hsl.h * 100) / 360}%`,
-      },
-      slider: {
-        marginTop: '1px',
-        width: '4px',
-        borderRadius: '1px',
-        height: '8px',
-        boxShadow: '0 0 2px rgba(0, 0, 0, .6)',
-        background: '#fff',
-        transform: 'translateX(-2px)',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    hue: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      borderRadius: activeRadius,
+      boxShadow: activeShadow,
     },
-    'vertical': {
-      pointer: {
+    container: {
+      padding: '0 2px',
+      position: 'relative',
+      height: '100%',
+      borderRadius: activeRadius,
+    },
+    pointer: {
+      position: 'absolute',
+      ...(direction === 'vertical' ? {
         left: '0px',
         top: `${-((hsl.h * 100) / 360) + 100}%`,
-      },
+      } : {
+        left: `${(hsl.h * 100) / 360}%`,
+      })
     },
-  }, { vertical: direction === 'vertical' })
+    slider: {
+      marginTop: '1px',
+      width: '4px',
+      borderRadius: '1px',
+      height: '8px',
+      boxShadow: '0 0 2px rgba(0, 0, 0, .6)',
+      background: '#fff',
+      transform: 'translateX(-2px)',
+    },
+  }
 
   return (
-    <div style={styles.hue as React.CSSProperties}>
+    <div style={baseStyles.hue}>
       <div
         className={`hue-${direction}`}
-        style={styles.container as React.CSSProperties}
+        style={baseStyles.container}
         ref={container}
         onMouseDown={handleMouseDown}
         onTouchMove={handleTouchStart}
@@ -95,7 +91,7 @@ export const Hue: FC<HueProps> = ({
         <style>{`
           .hue-horizontal {
             background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
-            background: -webkit-linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #00f 83%, #f00 100%);
+            background: -webkit-linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
           }
 
           .hue-vertical {
@@ -103,11 +99,11 @@ export const Hue: FC<HueProps> = ({
             background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
           }
         `}</style>
-        <div style={styles.pointer as React.CSSProperties}>
+        <div style={baseStyles.pointer}>
           {Pointer ? (
             <Pointer hsl={hsl} direction={direction} radius={activeRadius} shadow={activeShadow} />
           ) : (
-            <div style={styles.slider as React.CSSProperties} />
+            <div style={baseStyles.slider} />
           )}
         </div>
       </div>

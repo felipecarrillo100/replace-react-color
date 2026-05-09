@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 import { materialColors as material } from '../../constants/material-colors'
 import { ColorWrap, Raised } from '../common'
 import SwatchesGroup from './SwatchesGroup'
@@ -14,6 +13,7 @@ export interface SwatchesProps {
   hex: string;
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Swatches: FC<SwatchesProps> = ({
@@ -44,34 +44,36 @@ export const Swatches: FC<SwatchesProps> = ({
   ],
   hex,
   styles: passedStyles = {},
-  className = ''
+  className = '',
+  style = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      picker: {
-        width,
-        height,
-      },
-      overflow: {
-        height,
-        overflowY: 'scroll',
-      },
-      body: {
-        padding: '16px 0 6px 16px',
-      },
-      clear: {
-        clear: 'both',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    picker: {
+      width,
+      height,
+      ...style,
     },
-  }, passedStyles))
+    overflow: {
+      height,
+      overflowY: 'scroll',
+    },
+    body: {
+      padding: '16px 0 6px 16px',
+    },
+    clear: {
+      clear: 'both',
+    },
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   const handleChange = (data: string, e: any) => onChange && onChange({ hex: data, source: 'hex' }, e)
 
   return (
-    <div style={styles.picker as React.CSSProperties} className={`swatches-picker ${className}`}>
+    <div style={styles.picker} className={`swatches-picker ${className}`}>
       <Raised>
-        <div style={styles.overflow as React.CSSProperties}>
-          <div style={styles.body as React.CSSProperties}>
+        <div style={styles.overflow}>
+          <div style={styles.body}>
             {colors.map((group: string[], index: number) => (
               <SwatchesGroup
                 key={index}
@@ -81,7 +83,7 @@ export const Swatches: FC<SwatchesProps> = ({
                 onSwatchHover={onSwatchHover}
               />
             ))}
-            <div style={styles.clear as React.CSSProperties} />
+            <div style={styles.clear} />
           </div>
         </div>
       </Raised>

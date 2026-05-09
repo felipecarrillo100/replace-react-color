@@ -1,5 +1,4 @@
 import React, { FC, useRef } from 'react'
-import reactCSS from '../../reactcss'
 import * as saturation from '../../helpers/saturation'
 import { useColorDrag } from '../../helpers/useColorDrag'
 import { HSL, HSV } from '../../types'
@@ -49,62 +48,58 @@ export const Saturation: FC<SaturationProps> = ({
   const activeRadius = styleRadius || radius
   const activeShadow = styleShadow || shadow
 
-  const styles = reactCSS({
-    'default': {
-      color: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        background: `hsl(${hsl.h}, 100%, 50%)`,
-        borderRadius: activeRadius,
-      },
-      white: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        borderRadius: activeRadius,
-      },
-      black: {
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px',
-        boxShadow: activeShadow,
-        borderRadius: activeRadius,
-      },
-      pointer: {
-        position: 'absolute',
-        top: `${-(hsv.v * 100) + 100}%`,
-        left: `${hsv.s * 100}%`,
-        cursor: 'default',
-      },
-      circle: {
-        width: '4px',
-        height: '4px',
-        boxShadow: `0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0,0,0,.3),
-          0 0 1px 2px rgba(0,0,0,.4)`,
-        borderRadius: '50%',
-        cursor: 'hand',
-        transform: 'translate(-2px, -2px)',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    color: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      background: `hsl(${hsl.h}, 100%, 50%)`,
+      borderRadius: activeRadius,
+      ...colorStyle,
     },
-    'custom': {
-      color: colorStyle,
-      white,
-      black,
-      pointer,
-      circle,
+    white: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      borderRadius: activeRadius,
+      ...white,
     },
-  }, { 'custom': Object.keys(style).length > 0 })
+    black: {
+      position: 'absolute',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+      boxShadow: activeShadow,
+      borderRadius: activeRadius,
+      ...black,
+    },
+    pointer: {
+      position: 'absolute',
+      top: `${-(hsv.v * 100) + 100}%`,
+      left: `${hsv.s * 100}%`,
+      cursor: 'default',
+      ...pointer,
+    },
+    circle: {
+      width: '4px',
+      height: '4px',
+      boxShadow: `0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0,0,0,.3),
+        0 0 1px 2px rgba(0,0,0,.4)`,
+      borderRadius: '50%',
+      cursor: 'hand',
+      transform: 'translate(-2px, -2px)',
+      ...circle,
+    },
+  }
 
   return (
     <div
-      style={styles.color as React.CSSProperties}
+      style={baseStyles.color}
       ref={container}
       onMouseDown={handleMouseDown}
       onTouchMove={handleTouchStart}
@@ -120,13 +115,13 @@ export const Saturation: FC<SaturationProps> = ({
           background: linear-gradient(to top, #000, rgba(0,0,0,0));
         }
       `}</style>
-      <div style={styles.white as React.CSSProperties} className="saturation-white">
-        <div style={styles.black as React.CSSProperties} className="saturation-black" />
-        <div style={styles.pointer as React.CSSProperties}>
+      <div style={baseStyles.white} className="saturation-white">
+        <div style={baseStyles.black} className="saturation-black" />
+        <div style={baseStyles.pointer}>
           {Pointer ? (
             <Pointer hsv={hsv} hsl={hsl} radius={activeRadius} shadow={activeShadow} />
           ) : (
-            <div style={styles.circle as React.CSSProperties} />
+            <div style={baseStyles.circle} />
           )}
         </div>
       </div>

@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import reactCSS from '../../reactcss'
-import { merge } from '../../helpers/utils'
+import { mergeStyles } from '../../helpers/styles'
 import * as color from '../../helpers/color'
 import { ColorWrap, EditableInput, Raised } from '../common'
 import { RGB } from '../../types'
@@ -11,6 +10,7 @@ export interface MaterialProps {
   rgb: RGB;
   styles?: any;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Material: FC<MaterialProps> = ({
@@ -18,72 +18,74 @@ export const Material: FC<MaterialProps> = ({
   hex,
   rgb,
   styles: passedStyles = {},
-  className = ''
+  className = '',
+  style = {}
 }) => {
-  const styles = reactCSS(merge({
-    'default': {
-      material: {
-        width: '98px',
-        height: '98px',
-        padding: '16px',
-        fontFamily: 'Roboto',
-        boxSizing: 'content-box' as const,
-      },
-      HEXwrap: {
-        position: 'relative',
-      },
-      HEXinput: {
-        width: '100%',
-        marginTop: '12px',
-        fontSize: '15px',
-        color: '#333',
-        padding: '0px',
-        border: '0px',
-        borderBottom: `2px solid ${hex}`,
-        outline: 'none',
-        height: '30px',
-      },
-      HEXlabel: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        fontSize: '11px',
-        color: '#999999',
-        textTransform: 'capitalize',
-      },
-      RGBwrap: {
-        position: 'relative',
-      },
-      RGBinput: {
-        width: '100%',
-        marginTop: '12px',
-        fontSize: '15px',
-        color: '#333',
-        padding: '0px',
-        border: '0px',
-        borderBottom: '1px solid #eee',
-        outline: 'none',
-        height: '30px',
-      },
-      RGBlabel: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        fontSize: '11px',
-        color: '#999999',
-        textTransform: 'capitalize',
-      },
-      split: {
-        display: 'flex',
-        marginRight: '-10px',
-        paddingTop: '11px',
-      },
-      third: {
-        flex: '1',
-        paddingRight: '10px',
-      },
+  const baseStyles: Record<string, React.CSSProperties> = {
+    material: {
+      width: '98px',
+      height: '98px',
+      padding: '16px',
+      fontFamily: 'Roboto',
+      boxSizing: 'content-box',
+      ...style,
     },
-  }, passedStyles))
+    HEXwrap: {
+      position: 'relative',
+    },
+    HEXinput: {
+      width: '100%',
+      marginTop: '12px',
+      fontSize: '15px',
+      color: '#333',
+      padding: '0px',
+      border: '0px',
+      borderBottom: `2px solid ${hex}`,
+      outline: 'none',
+      height: '30px',
+    },
+    HEXlabel: {
+      position: 'absolute',
+      top: '0px',
+      left: '0px',
+      fontSize: '11px',
+      color: '#999999',
+      textTransform: 'capitalize',
+    },
+    RGBwrap: {
+      position: 'relative',
+    },
+    RGBinput: {
+      width: '100%',
+      marginTop: '12px',
+      fontSize: '15px',
+      color: '#333',
+      padding: '0px',
+      border: '0px',
+      borderBottom: '1px solid #eee',
+      outline: 'none',
+      height: '30px',
+    },
+    RGBlabel: {
+      position: 'absolute',
+      top: '0px',
+      left: '0px',
+      fontSize: '11px',
+      color: '#999999',
+      textTransform: 'capitalize',
+    },
+    split: {
+      display: 'flex',
+      marginRight: '-10px',
+      paddingTop: '11px',
+    },
+    third: {
+      flex: '1',
+      paddingRight: '10px',
+    },
+  }
+
+  const styles = mergeStyles(baseStyles, passedStyles)
 
   const handleChange = (data: any, e: any) => {
     if (!onChange) return
@@ -104,33 +106,33 @@ export const Material: FC<MaterialProps> = ({
 
   return (
     <Raised styles={passedStyles}>
-      <div style={styles.material as React.CSSProperties} className={`material-picker ${className}`}>
+      <div style={styles.material} className={`material-picker ${className}`}>
         <EditableInput
-          style={{ wrap: styles.HEXwrap as React.CSSProperties, input: styles.HEXinput as React.CSSProperties, label: styles.HEXlabel as React.CSSProperties }}
+          style={{ wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel }}
           label="hex"
           value={hex}
           onChange={handleChange}
         />
-        <div style={styles.split as React.CSSProperties} className="flexbox-fix">
-          <div style={styles.third as React.CSSProperties}>
+        <div style={styles.split} className="flexbox-fix">
+          <div style={styles.third}>
             <EditableInput
-              style={{ wrap: styles.RGBwrap as React.CSSProperties, input: styles.RGBinput as React.CSSProperties, label: styles.RGBlabel as React.CSSProperties }}
+              style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
               label="r"
               value={rgb.r}
               onChange={handleChange}
             />
           </div>
-          <div style={styles.third as React.CSSProperties}>
+          <div style={styles.third}>
             <EditableInput
-              style={{ wrap: styles.RGBwrap as React.CSSProperties, input: styles.RGBinput as React.CSSProperties, label: styles.RGBlabel as React.CSSProperties }}
+              style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
               label="g"
               value={rgb.g}
               onChange={handleChange}
             />
           </div>
-          <div style={styles.third as React.CSSProperties}>
+          <div style={styles.third}>
             <EditableInput
-              style={{ wrap: styles.RGBwrap as React.CSSProperties, input: styles.RGBinput as React.CSSProperties, label: styles.RGBlabel as React.CSSProperties }}
+              style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
               label="b"
               value={rgb.b}
               onChange={handleChange}
