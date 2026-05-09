@@ -46,7 +46,10 @@ export const ColorWrap = <P extends object>(Picker: ComponentType<P & ColorState
     const handleChange = useCallback((data: any, event: any) => {
       const isValidColor = color.simpleCheckForValidColor(data)
       if (isValidColor) {
-        const colors = color.toState({ a: state.hsl.a, ...data }, data.h || state.oldHue)
+        // If data is a string (e.g. from a swatch click), don't spread it.
+        // Instead, wrap it in an object so we can safely merge the current alpha.
+        const colorData = typeof data === 'string' ? { hex: data } : data
+        const colors = color.toState({ a: state.hsl.a, ...colorData }, data.h || state.oldHue)
         console.log('ColorWrap handleChange:', { inputA: data.a, stateA: state.hsl.a, finalA: colors.hsl.a })
         setState(colors)
         onChangeComplete && debouncedOnChangeComplete(onChangeComplete, colors, event)

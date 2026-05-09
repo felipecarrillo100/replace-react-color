@@ -24,6 +24,9 @@ export const simpleCheckForValidColor = (data: any) => {
 
 export const toState = (data: Color | any, oldHue?: number): ColorState => {
   const color = data.hex ? tinycolor(data.hex) : tinycolor(data)
+  if (data.a !== undefined && color.getAlpha() === 1) {
+    color.setAlpha(data.a)
+  }
   const hsl = color.toHsl()
   const hsv = color.toHsv()
   const rgb = color.toRgb()
