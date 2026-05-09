@@ -21,6 +21,7 @@ This repository brings the classic color pickers (Sketch, Photoshop, Chrome, etc
 
 Version 4.0 marks a significant milestone in the evolution of this fork, moving from a "modernized wrapper" to a completely rebuilt internal architecture.
 
+*   **Zero External Dependencies**: We have completely eliminated the final production dependency (`tinycolor2`) and replaced it with a custom, high-precision internal color engine.
 *   **Zero Styling Dependencies**: We have completely removed the `reactCSS` engine. Styles are now handled via native React inline styles, making the library even lighter and faster.
 *   **Standard Styling Props**: Every picker now supports standard `className` and `style` props out of the box.
 *   **Performance Boost**: Interactions (like dragging pointers) are significantly more fluid due to the removal of the legacy styling abstraction layer.

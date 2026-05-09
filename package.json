@@ -1,6 +1,6 @@
 {
   "name": "replace-react-color",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "A Collection of Color Pickers from Sketch, Photoshop, Chrome & more",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -43,9 +43,6 @@
     "material design",
     "popup"
   ],
-  "dependencies": {
-    "tinycolor2": "^1.6.0"
-  },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
@@ -58,7 +55,6 @@
     "@types/node": "^20.12.7",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/tinycolor2": "^1.4.6",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^9.1.1",
     "eslint-plugin-react": "^7.34.1",

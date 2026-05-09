@@ -1,4 +1,4 @@
-import tinycolor from 'tinycolor2'
+import * as engine from './color-engine'
 import { Color, ColorState } from '../types'
 
 export const simpleCheckForValidColor = (data: any) => {
@@ -23,14 +23,17 @@ export const simpleCheckForValidColor = (data: any) => {
 }
 
 export const toState = (data: Color | any, oldHue?: number): ColorState => {
-  const color = data.hex ? tinycolor(data.hex) : tinycolor(data)
-  if (data.a !== undefined && color.getAlpha() === 1) {
-    color.setAlpha(data.a)
-  }
-  const hsl = color.toHsl()
-  const hsv = color.toHsv()
-  const rgb = color.toRgb()
-  const hex = color.toHex()
+  const col = engine.parseColor(data)
+  const hsl = engine.rgbToHsl(col.r, col.g, col.b)
+  const hsv = engine.rgbToHsv(col.r, col.g, col.b)
+  const rgb = { r: Math.round(col.r), g: Math.round(col.g), b: Math.round(col.b), a: col.a }
+  const hex = engine.rgbToHex(col.r, col.g, col.b)
+
+  // Ensure alpha is preserved if it was explicitly passed
+  hsl.a = col.a
+  hsv.a = col.a
+  rgb.a = col.a
+
   if (hsl.s === 0) {
     hsl.h = oldHue || 0
     hsv.h = oldHue || 0
@@ -53,7 +56,10 @@ export const isValidHex = (hex: string) => {
   }
   // disable hex4 and hex8
   const lh = (String(hex).charAt(0) === '#') ? 1 : 0
-  return hex.length !== (4 + lh) && hex.length < (7 + lh) && tinycolor(hex).isValid()
+  if (hex.length !== (4 + lh) && hex.length < (7 + lh)) {
+    return engine.parseColor(hex).ok
+  }
+  return false
 }
 
 export const getContrastingColor = (data: Color) => {
@@ -78,5 +84,5 @@ export const red: ColorState = {
 
 export const isvalidColorString = (string: string, type: string) => {
   const stringWithoutDegree = string.replace('°', '')
-  return (tinycolor(`${ type } (${ stringWithoutDegree })`) as any)._ok
+  return engine.parseColor(`${ type } (${ stringWithoutDegree })`).ok
 }
