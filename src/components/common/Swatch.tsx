@@ -15,7 +15,7 @@ export interface SwatchProps {
   focusStyle?: React.CSSProperties;
 }
 
-export const Swatch: FC<SwatchProps> = ({
+const SwatchBase: FC<SwatchProps> = ({
   color,
   style,
   onClick = () => {},
@@ -66,4 +66,5 @@ export const Swatch: FC<SwatchProps> = ({
   )
 }
 
-export default handleFocus(Swatch)
+export const Swatch = handleFocus(SwatchBase)
+export default Swatch
