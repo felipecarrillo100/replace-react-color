@@ -33,7 +33,6 @@ export const ColorWrap = <P extends object>(Picker: ComponentType<P & ColorState
       
       // Only update if it's actually different to avoid 'weirdness' from redundant updates
       if (nextState.hex !== state.hex || nextState.hsl.a !== state.hsl.a) {
-        console.log('ColorWrap useEffect: syncing from props', { colorProp, prevAlpha: latestAlpha.current, nextAlpha: nextState.hsl.a })
         setState(nextState)
       }
     }, [colorProp])
@@ -52,7 +51,6 @@ export const ColorWrap = <P extends object>(Picker: ComponentType<P & ColorState
         // Instead, wrap it in an object so we can safely merge the current alpha.
         const colorData = typeof data === 'string' ? { hex: data } : data
         const colors = color.toState({ a: state.hsl.a, ...colorData }, data.h || state.oldHue)
-        console.log('ColorWrap handleChange:', { inputA: data.a, stateA: state.hsl.a, finalA: colors.hsl.a })
         setState(colors)
         onChangeComplete && debouncedOnChangeComplete(onChangeComplete, colors, event)
         onChange && onChange(colors, event)
